@@ -15,6 +15,9 @@ public class UserauswahlView extends GridLayout implements View {
 	public void enter(ViewChangeEvent event) {
 		setSizeFull();
 		setColumns(2);
+		
+		addUserButtons();
+		
         Button button = new Button("Neue Person",
                 new Button.ClickListener() {
             @Override
