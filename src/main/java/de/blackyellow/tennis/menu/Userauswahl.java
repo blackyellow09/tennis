@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
@@ -19,6 +20,7 @@ import com.vaadin.ui.Label;
  * Servlet implementation class Userauswahl
  */
 //@WebServlet(description = "Hauptmenü der Anwendung, Auswahl des Kunden", urlPatterns = { "/Userauswahl" })
+@Theme("valo")
 public class Userauswahl extends UI {
 
     /**
@@ -30,10 +32,10 @@ public class Userauswahl extends UI {
 	
 	@Override
     protected void init(VaadinRequest request) {
-        VerticalLayout layout = new VerticalLayout();
-        layout.addComponent(new Label("Hello Vaadin!"));
-        setContent(layout);
-        
+//        VerticalLayout layout = new VerticalLayout();
+//        layout.addComponent(new Label("Hello Vaadin!"));
+//        setContent(layout);
+        getPage().setTitle("Tennis-App");
         UserauswahlModel model = new UserauswahlModel();
         UserauswahlView view = new UserauswahlView();
         new UserauswahlPresenter(model, view);
@@ -42,7 +44,7 @@ public class Userauswahl extends UI {
         NeuePersonView neuePersonView = new NeuePersonView();
         new NeuePersonPresenter(neuePersonModel, neuePersonView);
         
-        layout.addComponent(view);
+//        layout.addComponent(view);
         
         navigator = new Navigator(this, this);
         
