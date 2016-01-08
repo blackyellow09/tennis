@@ -10,6 +10,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
+import de.blackyellow.tennis.bespannung.BespannungsuebersichtPresenter;
+import de.blackyellow.tennis.bespannung.BespannungsuebersichtView;
+import de.blackyellow.tennis.bespannung.BespannungsuebersichtViewImpl;
 import de.blackyellow.tennis.person.NeuePersonModel;
 import de.blackyellow.tennis.person.NeuePersonPresenter;
 import de.blackyellow.tennis.person.NeuePersonView;
@@ -32,9 +35,6 @@ public class Tennisapp extends UI {
 	
 	@Override
     protected void init(VaadinRequest request) {
-//        VerticalLayout layout = new VerticalLayout();
-//        layout.addComponent(new Label("Hello Vaadin!"));
-//        setContent(layout);
         getPage().setTitle("Tennis-App");
         UserauswahlModel model = new UserauswahlModel();
         UserauswahlViewImpl view = new UserauswahlViewImpl();
@@ -44,12 +44,14 @@ public class Tennisapp extends UI {
         NeuePersonView neuePersonView = new NeuePersonView();
         new NeuePersonPresenter(neuePersonModel, neuePersonView);
         
-//        layout.addComponent(view);
+        BespannungsuebersichtViewImpl bespannungsView = new BespannungsuebersichtViewImpl();
+        new BespannungsuebersichtPresenter(bespannungsView);
         
         navigator = new Navigator(this, this);
         
-        navigator.addView(Views.ROOT_VIEW, view);
-        navigator.addView(Views.NEUE_PERSON, neuePersonView);
+        navigator.addView(UserauswahlView.ROOT_VIEW, view);
+        navigator.addView(NeuePersonView.NEUE_PERSON, neuePersonView);
+        navigator.addView(BespannungsuebersichtView.BESPANNUNGSUEBERSICHT, bespannungsView);
     }
 
 

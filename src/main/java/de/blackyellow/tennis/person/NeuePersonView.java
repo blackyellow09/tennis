@@ -11,10 +11,12 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.blackyellow.tennis.menu.Views;
+import de.blackyellow.tennis.menu.UserauswahlView;
 
 public class NeuePersonView extends VerticalLayout implements View {
 
+	public static final String NEUE_PERSON = "neuePerson";
+	
 	@Override
 	public void enter(ViewChangeEvent event) {
 		if(getComponentCount() > 0)
@@ -30,7 +32,7 @@ public class NeuePersonView extends VerticalLayout implements View {
                 new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                getUI().getNavigator().navigateTo(Views.ROOT_VIEW);
+                getUI().getNavigator().navigateTo(UserauswahlView.ROOT_VIEW);
             }
         });
 //        button.setStyleName(ValoTheme.BUTTON);

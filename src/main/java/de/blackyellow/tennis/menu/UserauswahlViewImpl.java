@@ -13,7 +13,9 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import de.blackyellow.tennis.bespannung.BespannungsuebersichtView;
 import de.blackyellow.tennis.person.Kunde;
+import de.blackyellow.tennis.person.NeuePersonView;
 
 public class UserauswahlViewImpl extends GridLayout implements UserauswahlView, View {
 
@@ -32,16 +34,17 @@ public class UserauswahlViewImpl extends GridLayout implements UserauswahlView, 
 		setSizeFull();
 		setColumns(2);
 		
-		addSearchBox(listeners.getKunden());
+		BeanItemContainer<Kunde> kunden = listeners.getKunden();
+		addSearchBox(kunden);
 		
-		addUserButtons();
+		addUserButtons(kunden);
 		
         @SuppressWarnings("serial")
 		Button button = new Button("Neue Person",
                 new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                getUI().getNavigator().navigateTo(Views.NEUE_PERSON);
+                getUI().getNavigator().navigateTo(NeuePersonView.NEUE_PERSON);
             }
         });
         button.setStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP);
@@ -98,15 +101,19 @@ public class UserauswahlViewImpl extends GridLayout implements UserauswahlView, 
 //        });
 	}
 
-	public void addUserButtons()
+	public void addUserButtons(BeanItemContainer<Kunde> kunden)
 	{
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < kunden.size(); i++) {
+			String kundenname = kunden.getIdByIndex(i).getName();
+			final int kundennummer = kunden.getIdByIndex(i).getKundennummer();
+			
 			@SuppressWarnings("serial")
-			Button button = new Button("User "+i,
+			Button button = new Button(kundenname,//"User "+i,
 	                new Button.ClickListener() {
 	            @Override
 	            public void buttonClick(ClickEvent event) {
-	                getUI().getNavigator().navigateTo("neuePerson");
+	                getUI().getNavigator().navigateTo(BespannungsuebersichtView.BESPANNUNGSUEBERSICHT 
+	                		+ "/" + kundennummer);
 	            }
 	        });
 	        button.setStyleName(ValoTheme.BUTTON_ICON_ALIGN_TOP);

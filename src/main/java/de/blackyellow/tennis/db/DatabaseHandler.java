@@ -66,4 +66,26 @@ public class DatabaseHandler {
 		}
 		return connection;
 	}
+
+	public static Kunde liefereKunde(int kundennummer) {
+		Connection connection = getConnection();
+		Kunde kunde = null;
+
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT * FROM Kunden WHERE id = ?;");
+			preparedStatement.setInt(1, kundennummer);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				String vorname = resultSet.getString(2);
+				String nachname = resultSet.getString(3);
+				kunde = new Kunde(kundennummer, vorname, nachname);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return kunde;
+	}
 }
