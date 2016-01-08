@@ -21,9 +21,9 @@ import com.vaadin.ui.Label;
  */
 //@WebServlet(description = "Hauptmenü der Anwendung, Auswahl des Kunden", urlPatterns = { "/Userauswahl" })
 @Theme("valo")
-public class Userauswahl extends UI {
+public class Tennisapp extends UI {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5514058771932638536L;
@@ -37,7 +37,7 @@ public class Userauswahl extends UI {
 //        setContent(layout);
         getPage().setTitle("Tennis-App");
         UserauswahlModel model = new UserauswahlModel();
-        UserauswahlView view = new UserauswahlView();
+        UserauswahlViewImpl view = new UserauswahlViewImpl();
         new UserauswahlPresenter(model, view);
         
         NeuePersonModel neuePersonModel = new NeuePersonModel();
@@ -48,8 +48,8 @@ public class Userauswahl extends UI {
         
         navigator = new Navigator(this, this);
         
-        navigator.addView("", view);
-        navigator.addView("neuePerson", neuePersonView);
+        navigator.addView(Views.ROOT_VIEW, view);
+        navigator.addView(Views.NEUE_PERSON, neuePersonView);
     }
 
 
