@@ -31,7 +31,7 @@ public class DatabaseHandler {
 //			SQLContainer container = new SQLContainer(tableQuery);
 //			
 //			container.g
-			Connection connection = getConnection();
+			Connection connection = DBConnection.getDBConnection();
 			
 			PreparedStatement preparedStatement = connection
 					.prepareStatement("SELECT * FROM Kunden;");
@@ -52,23 +52,8 @@ public class DatabaseHandler {
 		return colKunde;
 	}
 
-	private static Connection getConnection() {
-		Connection connection = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://127.7.125.130:3306/tennis", "adminanAm5tu", "iNqanGf6WbId");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return connection;
-	}
-
 	public static Kunde liefereKunde(int kundennummer) {
-		Connection connection = getConnection();
+		Connection connection = DBConnection.getDBConnection();
 		Kunde kunde = null;
 
 		PreparedStatement preparedStatement;
