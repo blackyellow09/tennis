@@ -21,11 +21,11 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
     
 	public static Connection getDBConnection()
 	{
-		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+		String basepath = VaadinService.getCurrent().getBaseDirectory().getPath();//getAbsolutePath();
 		System.out.println(basepath);
 		Properties props = new Properties();
 		try {
-			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(basepath + "/WEB-INF/dbsettings.properties"));
+			BufferedInputStream bis = new BufferedInputStream(new FileInputStream("/WEB-INF/dbsettings.properties"));
 			props.load(bis);
 			bis.close();
 		} catch (FileNotFoundException e1) {
