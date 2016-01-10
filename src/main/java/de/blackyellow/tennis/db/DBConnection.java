@@ -22,6 +22,7 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 	public static Connection getDBConnection()
 	{
 		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+		System.out.println(basepath);
 		Properties props = new Properties();
 		try {
 			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(basepath + "/WEB-INF/dbsettings.properties"));
