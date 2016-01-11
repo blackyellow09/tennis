@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import com.vaadin.server.ClassResource;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinService;
 
@@ -33,9 +34,9 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 		}
 		Properties props = new Properties();
 		try {
-			String externalRes = new ExternalResource("dbsettings.properties").getURL();
+			ClassResource externalRes = new ClassResource("dbsettings.properties");
 			System.out.println(externalRes);
-			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(externalRes));
+			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(externalRes.getFilename()));
 			props.load(bis);
 			bis.close();
 		} catch (FileNotFoundException e1) {
