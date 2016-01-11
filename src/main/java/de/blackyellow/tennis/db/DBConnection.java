@@ -26,6 +26,7 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 		System.out.println(basepath);
 		System.out.println(VaadinService.getCurrent().getBaseDirectory().list());
 		System.out.println(VaadinService.getCurrent().getBaseDirectory().getName());
+		System.out.println(VaadinService.getCurrentRequest().getContextPath());
 		try {
 			System.out.println(VaadinService.getCurrent().getBaseDirectory().getCanonicalPath());
 		} catch (IOException e2) {
@@ -34,7 +35,7 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 		}
 		Properties props = new Properties();
 		try {
-			String externalRes = new ExternalResource("/tennis/dbsettings.properties").getURL();
+			String externalRes = new ExternalResource("dbsettings.properties").getURL();
 			System.out.println(externalRes);
 			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(externalRes));
 			props.load(bis);
