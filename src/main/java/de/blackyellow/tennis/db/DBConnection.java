@@ -23,6 +23,14 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 	{
 		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 		System.out.println(basepath);
+		System.out.println(VaadinService.getCurrent().getBaseDirectory().list());
+		System.out.println(VaadinService.getCurrent().getBaseDirectory().getName());
+		try {
+			System.out.println(VaadinService.getCurrent().getBaseDirectory().getCanonicalPath());
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		Properties props = new Properties();
 		try {
 			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(basepath + "/dbsettings.properties"));
