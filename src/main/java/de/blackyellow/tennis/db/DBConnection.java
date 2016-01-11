@@ -23,10 +23,8 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 	public static Connection getDBConnection()
 	{
 		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
-		System.out.println(basepath);
 		System.out.println(VaadinService.getCurrent().getBaseDirectory().list());
-		System.out.println(VaadinService.getCurrent().getBaseDirectory().getName());
-		System.out.println(VaadinService.getCurrentRequest().getContextPath());
+		System.out.println("Context Path: "+ VaadinService.getCurrentRequest().getContextPath());
 		try {
 			System.out.println(VaadinService.getCurrent().getBaseDirectory().getCanonicalPath());
 		} catch (IOException e2) {
