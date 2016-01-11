@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinService;
 
 import de.blackyellow.tennis.util.ErrorConstants;
@@ -33,7 +34,9 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 		}
 		Properties props = new Properties();
 		try {
-			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(basepath + "/dbsettings.properties"));
+			String externalRes = new ExternalResource("/dbsettings.properties").getURL();
+			System.out.println(externalRes);
+			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(externalRes));
 			props.load(bis);
 			bis.close();
 		} catch (FileNotFoundException e1) {
