@@ -19,10 +19,6 @@
  </servlet>
  <servlet-mapping>
   <servlet-name>Tennisapp</servlet-name>
-  <url-pattern>/tennis/*</url-pattern>
- </servlet-mapping>
- <servlet-mapping>
-  <servlet-name>Tennisapp</servlet-name>
-  <url-pattern>/VAADIN/*</url-pattern>
+  <url-pattern>/*</url-pattern>
  </servlet-mapping>
 </web-app>

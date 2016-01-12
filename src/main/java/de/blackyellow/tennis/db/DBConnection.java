@@ -1,6 +1,7 @@
 package de.blackyellow.tennis.db;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,8 +36,9 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 		Properties props = new Properties();
 		try {
 			ClassResource externalRes = new ClassResource("dbsettings.properties");
-			System.out.println(externalRes);
-			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(externalRes.getFilename()));
+			System.out.println(externalRes.getFilename());
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			BufferedInputStream bis = new BufferedInputStream(classLoader.getResourceAsStream("dbsettings.properties"));
 			props.load(bis);
 			bis.close();
 		} catch (FileNotFoundException e1) {
