@@ -1,6 +1,12 @@
 package de.blackyellow.tennis.menu;
 
+import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.filter.SimpleStringFilter;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.event.FieldEvents.TextChangeEvent;
+import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -10,7 +16,11 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.HeaderRow;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.blackyellow.tennis.bespannung.BespannungsuebersichtView;
@@ -51,6 +61,8 @@ public class UserauswahlViewImpl extends GridLayout implements UserauswahlView, 
         button.setIcon(FontAwesome.USER_PLUS);
         addComponent(button);
         setComponentAlignment(button, Alignment.MIDDLE_CENTER);
+        
+        addTableSchlaeger();
 	}
 	
 	private void addSearchBox(BeanItemContainer<Kunde> colKunde) {
@@ -127,5 +139,70 @@ public class UserauswahlViewImpl extends GridLayout implements UserauswahlView, 
 	public void addListener(UserauswahlViewListener listener) {
 		listeners = listener;
 	}
+
+	private void addTableSchlaeger() {
+		//Set the data source (IndexedContainer)
+		BeanItemContainer<Kunde> schlaeger = listeners.getKunden();
+		Grid table = new Grid();
+		table.setContainerDataSource(schlaeger);
+		table.setColumns(Kunde.NACHNAME, Kunde.VORNAME);
+		// Set the selection mode
+		table.setSelectionMode(SelectionMode.SINGLE);
+		
+		// Add filtering fields in the header
+		setColumnFiltering(table, true);
+		
+		table.addItemClickListener(new ItemClickListener() {
+			
+			@Override
+			public void itemClick(ItemClickEvent event) {
+				int kundennummer = ((Kunde)event.getItemId()).getKundennummer();
+				getUI().getNavigator().navigateTo(BespannungsuebersichtView.BESPANNUNGSUEBERSICHT 
+                		+ "/" + kundennummer);
+			}
+		});
+		
+		addComponent(table);
+	}
+	
+	private void setColumnFiltering(Grid table, boolean filtered) {
+        HeaderRow filteringHeader = table.appendHeaderRow();
+ 
+        // Add new TextFields to each column which filters the data from
+        // that column
+        String columnId = Kunde.NACHNAME.toString();
+        TextField filter = getColumnFilter(columnId, table);
+        filteringHeader.getCell(columnId).setComponent(filter);
+        filteringHeader.getCell(columnId).setStyleName("filter-header");
+    }
+ 
+    private TextField getColumnFilter(final Object columnId, final Grid table) {
+        TextField filter = new TextField();
+//        filter.setWidth("100%");
+        filter.addStyleName(ValoTheme.TEXTFIELD_TINY);
+        filter.setInputPrompt("Filter");
+        filter.addTextChangeListener(new TextChangeListener() {
+ 
+            SimpleStringFilter filter = null;
+ 
+            @Override
+            public void textChange(TextChangeEvent event) {
+                Filterable f = (Filterable) table.getContainerDataSource();
+ 
+                // Remove old filter
+                if (filter != null) {
+                    f.removeContainerFilter(filter);
+                }
+ 
+                // Set new filter for the "Name" column
+                filter = new SimpleStringFilter(columnId, event.getText(),
+                        true, true);
+                f.addContainerFilter(filter);
+ 
+                table.cancelEditor();
+            }
+        });
+        return filter;
+    }
 
 }

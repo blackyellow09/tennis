@@ -25,14 +25,6 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 	public static Connection getDBConnection()
 	{
 		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
-		System.out.println(VaadinService.getCurrent().getBaseDirectory().list());
-		System.out.println("Context Path: "+ VaadinService.getCurrentRequest().getContextPath());
-		try {
-			System.out.println(VaadinService.getCurrent().getBaseDirectory().getCanonicalPath());
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
 		Properties props = new Properties();
 		try {
 			ClassResource externalRes = new ClassResource("dbsettings.properties");
@@ -47,9 +39,21 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 			logger.error(ErrorConstants.FEHLER_LESEN_PROPERTIES, e);
 		}
 		
-		String host = props.getProperty("host").toString();
-        String username = props.getProperty("username").toString();
-        String password = props.getProperty("password").toString();
+		String host;
+		String username;
+		String password;
+		if(basepath.equals("/localhost"))
+		{
+			host = props.getProperty("host").toString();
+	        username = props.getProperty("username").toString();
+	        password = props.getProperty("password").toString();
+		}
+		else
+		{
+			host = props.getProperty("hostlokal").toString();
+	        username = props.getProperty("usernamelokal").toString();
+	        password = props.getProperty("passwordlokal").toString();
+		}
         String driver = props.getProperty("driver").toString();
 		
 		
