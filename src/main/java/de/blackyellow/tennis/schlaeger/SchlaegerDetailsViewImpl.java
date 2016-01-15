@@ -1,21 +1,16 @@
 package de.blackyellow.tennis.schlaeger;
 
-import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.blackyellow.tennis.bespannung.BespannungSchlaegerView.BespannungSchlaegerViewListener;
-import de.blackyellow.tennis.person.Kunde;
-import de.blackyellow.tennis.person.NeuePersonView;
+import de.blackyellow.tennis.util.TextfieldMitUnit;
 
 public class SchlaegerDetailsViewImpl extends FormLayout implements View, SchlaegerDetailsView {
 
@@ -39,24 +34,37 @@ public class SchlaegerDetailsViewImpl extends FormLayout implements View, Schlae
 
 		BeanItem<Schlaeger> schlaegerBean = new BeanItem<Schlaeger>(schlaeger);
 		
+		Label ueberschrift = new Label("Schlägerdetails");
+		ueberschrift.setStyleName(ValoTheme.LABEL_H2);
+		addComponent(ueberschrift);
+		
 		TextField marke = new TextField("Marke", schlaeger.getMarke());
+		marke.setRequired(true);
 		addComponent(marke);
 		TextField bezeichnung = new TextField("Bezeichnung", schlaeger.getBezeichnung());
+		bezeichnung.setRequired(true);
 		bezeichnung.setWidth(100, Unit.PERCENTAGE);
 		addComponent(bezeichnung);
 		TextField mains = new TextField("Anzahl Längsseiten", schlaegerBean.getItemProperty(Schlaeger.MAINS));
+		mains.setStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
 		addComponent(mains);
 		TextField crosses = new TextField("Anzahl Querseiten", schlaegerBean.getItemProperty(Schlaeger.CROSSES));
+		crosses.setStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
 		addComponent(crosses);
-		TextField kopfgroesse = new TextField("Kopfgröße", schlaegerBean.getItemProperty(Schlaeger.KOPFGROESSE));
+		TextfieldMitUnit kopfgroesse = new TextfieldMitUnit("Kopfgröße", "cm²", schlaegerBean.getItemProperty(Schlaeger.KOPFGROESSE));
 		addComponent(kopfgroesse);
-		TextField gewicht = new TextField("Gewicht", schlaegerBean.getItemProperty(Schlaeger.GEWICHT));
+		TextfieldMitUnit gewicht = new TextfieldMitUnit("Gewicht","g", schlaegerBean.getItemProperty(Schlaeger.GEWICHT));
 		addComponent(gewicht);
-		TextField seitenlaenge = new TextField("Empfohlene Seitenlänge", schlaegerBean.getItemProperty(Schlaeger.SEITENLAENGE));
+		TextfieldMitUnit seitenlaenge = new TextfieldMitUnit("Empfohlene Seitenlänge", "m", schlaegerBean.getItemProperty(Schlaeger.SEITENLAENGE));
 		addComponent(seitenlaenge);
-		TextField seitenlaengeOpt = new TextField("Optimierte Seitenlänge", schlaegerBean.getItemProperty(Schlaeger.SEITENLAENGE_OPT));
+		TextfieldMitUnit seitenlaengeOpt = new TextfieldMitUnit("Optimierte Seitenlänge", "m", schlaegerBean.getItemProperty(Schlaeger.SEITENLAENGE_OPT));
 		addComponent(seitenlaengeOpt);
 		
+		HorizontalLayout hl = new HorizontalLayout();
+		hl.setSpacing(true);
+		hl.addComponent(new Button("Speichern"));
+		hl.addComponent(new Button("Zurück"));
+		addComponent(hl);
 		
 	}
 
@@ -69,5 +77,4 @@ public class SchlaegerDetailsViewImpl extends FormLayout implements View, Schlae
 	public void setSchlaeger(Schlaeger schlaeger) {
 		this.schlaeger = schlaeger;
 	}
-
 }

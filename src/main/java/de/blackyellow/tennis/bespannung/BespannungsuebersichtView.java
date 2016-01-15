@@ -1,5 +1,7 @@
 package de.blackyellow.tennis.bespannung;
 
+import com.vaadin.data.util.BeanItemContainer;
+
 import de.blackyellow.tennis.person.Kunde;
 
 public interface BespannungsuebersichtView {
@@ -8,6 +10,8 @@ public interface BespannungsuebersichtView {
 	{
 
 		void ermittleKundendaten(String parameters);
+
+		BeanItemContainer<BespannungKurzItem> getBespannungsliste();
 		
 	}
 

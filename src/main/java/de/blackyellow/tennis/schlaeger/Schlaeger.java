@@ -21,6 +21,10 @@ public class Schlaeger implements Serializable{
 	public static final String GEWICHT = "gewicht";
 	public static final String SEITENLAENGE = "seitelaenge";
 	public static final String SEITENLAENGE_OPT = "seitenlaengeOpt";
+
+	public static final String BILD = "bild";
+
+	public static final String ID = "id";
 	
 	private int id;
 	private String marke;
@@ -35,6 +39,7 @@ public class Schlaeger implements Serializable{
 	private double seitelaenge;
 	private double gewicht;
 	private double seitenlaengeOpt;
+	private String bild;
 
 	public Schlaeger(int id, String marke, String bezeichnung) {
 		this.id = id;
@@ -131,8 +136,20 @@ public class Schlaeger implements Serializable{
 	public void setSeitenlaengeOpt(double seitenlaengeOpt) {
 		this.seitenlaengeOpt = seitenlaengeOpt;
 	}
-
-	public void setName(String name) {
-		this.name = name;
+	
+	public String getBild()
+	{
+		if(getMains() > 0 && getCrosses() > 0)
+		{
+			return getMains() + "/" + getCrosses();
+		}
+		else if(getMains() > 0)
+		{
+			return getMains()+"";
+		}
+		else
+		{
+			return getCrosses()+"";
+		}
 	}
 }
