@@ -11,27 +11,21 @@ import de.blackyellow.tennis.schlaeger.Schlaeger;
 public class BespannungsuebersichtPresenter implements BespannungsuebersichtViewListener{
 
 	private BespannungsuebersichtView view;
+	private BespannungsuebersichtModel model;
 
-	public BespannungsuebersichtPresenter(BespannungsuebersichtView view) {
-//		this.model = model;
+	public BespannungsuebersichtPresenter(BespannungsuebersichtView view, BespannungsuebersichtModel model) {
+		this.model = model;
 		this.view = view;
 		
 		view.addListener(this);
 	}
 
 	@Override
-	public void ermittleKundendaten(String parameters) {
+	public BespannungsuebersichtModel ermittleDaten(String parameters) {
 		int kundennummer = Integer.parseInt(parameters);
-		view.setKunde(DatabaseHandler.liefereKunde(kundennummer));
-		
+		model.setKunde(DatabaseHandler.liefereKunde(kundennummer));
+		model.setBespannungen(DatabaseHandler.liefereSchlaegerZuKunde(kundennummer));
+		return model;
 	}
 
-	@Override
-	public BeanItemContainer<BespannungKurzItem> getBespannungsliste() {
-		BeanItemContainer<BespannungKurzItem> container = new BeanItemContainer<BespannungKurzItem>(BespannungKurzItem.class);
-		Schlaeger schlaeger = DatabaseHandler.liefereSchlaeger(1);
-		Bespannung bespannung = new Bespannung(new Date(), 36, 25, 26);
-		container.addBean(new BespannungKurzItem(schlaeger, bespannung));
-		return container;
-	}
 }

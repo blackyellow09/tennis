@@ -29,11 +29,11 @@ public class BespannungsuebersichtViewImpl extends VerticalLayout implements Vie
 	 */
 	private static final long serialVersionUID = -7051374909271803147L;
 	private BespannungsuebersichtViewListener listener;
-	private Kunde kunde;
+	private BespannungsuebersichtModel model;
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		listener.ermittleKundendaten(event.getParameters());
+		model = listener.ermittleDaten(event.getParameters());
 
 		if(getComponentCount() > 0)
 		{
@@ -43,16 +43,17 @@ public class BespannungsuebersichtViewImpl extends VerticalLayout implements Vie
 //		setMargin(true);
 		setSpacing(true);
 		
-		Label ueberschrift = new Label("Schlägerübersicht von " + kunde.getName());
+		Label ueberschrift = new Label("Schlägerübersicht von " + getKunde().getName());
 		ueberschrift.setStyleName(ValoTheme.LABEL_H2);
 		addComponent(ueberschrift);
 		
-		BeanItemContainer<BespannungKurzItem> schlaeger = listener.getBespannungsliste();
+		BeanItemContainer<BespannungKurzItem> schlaeger = model.getBespannungen();
 		Grid table = new Grid();
 		table.setSizeFull();
 		table.setContainerDataSource(schlaeger);
-		table.setColumns(BespannungKurzItem.NAME, BespannungKurzItem.BILD, BespannungKurzItem.DATUM, 
+		table.setColumns(BespannungKurzItem.ID, BespannungKurzItem.NAME, BespannungKurzItem.BILD, BespannungKurzItem.DATUM, 
 				BespannungKurzItem.DT, BespannungKurzItem.LAENGS, BespannungKurzItem.QUER);
+		table.getColumn(BespannungKurzItem.ID).setHeaderCaption("ID");
 		table.getColumn(BespannungKurzItem.NAME).setHeaderCaption("Schläger");
 		table.getColumn(BespannungKurzItem.BILD).setHeaderCaption("Seitenbild");
 		table.getColumn(BespannungKurzItem.DATUM).setHeaderCaption("Letzte Bespannung");
@@ -66,6 +67,7 @@ public class BespannungsuebersichtViewImpl extends VerticalLayout implements Vie
 		// Set the selection mode
 		table.setSelectionMode(SelectionMode.SINGLE);
 		
+		table.sort(BespannungKurzItem.DATUM);
 		// Add filtering fields in the header
 //		setColumnFiltering(table, true, Schlaeger.NAME);
 		
@@ -73,28 +75,21 @@ public class BespannungsuebersichtViewImpl extends VerticalLayout implements Vie
 			
 			@Override
 			public void itemClick(ItemClickEvent event) {
+				int kundennr = getKunde().getKundennummer();
 				int id = ((BespannungKurzItem)event.getItemId()).getId();
 				getUI().getNavigator().navigateTo(BespannungSchlaegerView.BESPANNUNG_SCHLAEGER 
-                		+ "/" + id);
+                		+ "/0/" +kundennr +"/"+ id);
 			}
 		});
 		addComponent(table);
-		
-		Button schlaeger1 = new Button("Schläger 1",
-                new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getUI().getNavigator().navigateTo(BespannungSchlaegerView.BESPANNUNG_SCHLAEGER);
-            }
-        });
-		addComponent(schlaeger1);
 		
 		@SuppressWarnings("serial")
 		Button button = new Button("Neuen Schläger zuordnen",
                 new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                getUI().getNavigator().navigateTo(BespannungSchlaegerView.BESPANNUNG_SCHLAEGER_EDITABLE);
+            	int kundennr = getKunde().getKundennummer();
+                getUI().getNavigator().navigateTo(BespannungSchlaegerView.BESPANNUNG_SCHLAEGER_EDITABLE + "/" +kundennr);
             }
         });
         button.setIcon(FontAwesome.CART_PLUS);
@@ -106,9 +101,9 @@ public class BespannungsuebersichtViewImpl extends VerticalLayout implements Vie
 		this.listener = listener;
 	}
 
-	@Override
-	public void setKunde(Kunde kunde) {
-		this.kunde = kunde;
+	private Kunde getKunde() {
+		return model.getKunde();
 	}
+
 
 }

@@ -1,13 +1,18 @@
 package de.blackyellow.tennis.bespannung;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.vaadin.data.fieldgroup.PropertyId;
 
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 
-public class BespannungKurzItem {
+public class BespannungKurzItem implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2306081499795261991L;
 	public static final String DOT = ".";
 	public static final String BESPANNUNG = "bespannung";
 	public static final String SCHLAEGER = "schlaeger";
@@ -45,17 +50,17 @@ public class BespannungKurzItem {
 	
 	public int getQuer()
 	{
-		return getBespannung().getQuer();
+		return getBespannung() != null ? getBespannung().getQuer() : 0;
 	}
 	
 	public Date getDatum() {
-		return getBespannung().getDatum();
+		return getBespannung() != null ? getBespannung().getDatum() : null;
 	}
 	public int getDt() {
-		return getBespannung().getDt();
+		return getBespannung() != null ? getBespannung().getDt() : 0;
 	}
 	public int getLaengs() {
-		return getBespannung().getLaengs();
+		return getBespannung() != null ? getBespannung().getLaengs() : 0;
 	}
 	
 	public String getName()
@@ -70,6 +75,6 @@ public class BespannungKurzItem {
 	
 	public int getId()
 	{
-		return getSchlaeger().getId();
+		return getSchlaeger().getSchlaegerNr();
 	}
 }

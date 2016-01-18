@@ -7,6 +7,8 @@ public interface BespannungSchlaegerView {
 	interface BespannungSchlaegerViewListener
 	{
 
+		BespannungSchlaegerModel ermittleDaten(String parameters);
+
 		
 	}
 

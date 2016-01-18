@@ -1,6 +1,7 @@
 package de.blackyellow.tennis.db;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,8 @@ import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 
 import de.blackyellow.tennis.Saite;
+import de.blackyellow.tennis.bespannung.Bespannung;
+import de.blackyellow.tennis.bespannung.BespannungKurzItem;
 import de.blackyellow.tennis.person.Kunde;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 import de.blackyellow.tennis.util.ErrorConstants;
@@ -165,5 +168,101 @@ public class DatabaseHandler {
 			notification.show(Page.getCurrent());
 		}
 		return listSaite;
+	}
+	
+	public static ArrayList<Bespannung> liefereBespannung(int schlaegerId)
+	{
+		Connection connection = DBConnection.getDBConnection();
+		ArrayList<Bespannung> listBespannung = new ArrayList<Bespannung>();
+		if(connection == null)
+		{
+			return listBespannung;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT * FROM bespannung, saiten WHERE schlaeger = ? "
+					+ "AND bespannung.saite = saiten.id;");
+			preparedStatement.setInt(1, schlaegerId);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				Date datum = resultSet.getDate(3);
+				int dt = resultSet.getInt(4);
+				int kgLaengs = resultSet.getInt(5);
+				int kgQuer = resultSet.getInt(6);
+				Bespannung bespannung = new Bespannung(datum, dt, kgLaengs, kgQuer);
+				bespannung.setPreis(resultSet.getBigDecimal(7));
+				Saite saite = new Saite(resultSet.getInt(8), resultSet.getString(10), resultSet.getString(11), resultSet.getString(12));
+				bespannung.setSaite(saite);
+				listBespannung.add(bespannung);
+			}
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_BESPANNUNG, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_BESPANNUNG.toString());
+			notification.show(Page.getCurrent());
+		}
+		return listBespannung;
+	}
+
+	public static ArrayList<BespannungKurzItem> liefereSchlaegerZuKunde(int kundennummer) {
+		// Schlaeger schlaeger = DatabaseHandler.liefereSchlaeger(1);
+//		Bespannung bespannung = new Bespannung(new Date(), 36, 25, 26);
+//		container.addBean(new BespannungKurzItem(schlaeger, bespannung));
+		/*
+		 * SELECT *
+FROM `schlaeger` , schlaegermodelle
+WHERE `Kunde` =1
+AND `Modell` = schlaegermodelle.id
+		 */
+		Connection connection = DBConnection.getDBConnection();
+		ArrayList<Schlaeger> listSchlaeger = new ArrayList<Schlaeger>();
+		ArrayList<BespannungKurzItem> listKurzItems = new ArrayList<BespannungKurzItem>();
+		if(connection == null)
+		{
+			return null;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaegermodelle.* FROM `schlaeger` , schlaegermodelle WHERE `Kunde` = ? AND `Modell` = schlaegermodelle.id;");
+			preparedStatement.setInt(1, kundennummer);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				int modellId = resultSet.getInt(2);
+				String marke = resultSet.getString(3);
+				String bezeichnung = resultSet.getString(4);
+				int mains = resultSet.getInt(5);
+				int crosses = resultSet.getInt(6);
+				int kopfgroesse = resultSet.getInt(7);
+				double gewicht = resultSet.getDouble(8);
+				double seitenlaenge = resultSet.getDouble(9);
+				double seitenlaengeOpt = resultSet.getDouble(10);
+				listSchlaeger.add(new Schlaeger(id, modellId, kundennummer, marke, bezeichnung, mains, crosses, 
+						kopfgroesse, gewicht, seitenlaenge, seitenlaengeOpt));
+			}
+			
+			for (Schlaeger schlaeger : listSchlaeger) {
+				int schlaegerNr = schlaeger.getSchlaegerNr();
+				preparedStatement = connection.prepareStatement("SELECT * FROM bespannung WHERE  schlaeger = ? AND datum = (SELECT MAX(Datum) FROM bespannung);");
+				preparedStatement.setInt(1, schlaegerNr);
+				ResultSet resultSet2 = preparedStatement.executeQuery();
+				Bespannung bespannung = null;
+				while (resultSet2.next()) {
+					Date datum = resultSet2.getDate(3);
+					int dt = resultSet2.getInt(4);
+					int kgLaengs = resultSet2.getInt(5);
+					int kgQuer = resultSet2.getInt(6);
+					bespannung = new Bespannung(datum, dt, kgLaengs, kgQuer);
+					bespannung.setPreis(resultSet2.getBigDecimal(7));
+				}
+				listKurzItems.add(new BespannungKurzItem(schlaeger, bespannung));
+			}
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN.toString());
+			notification.show(Page.getCurrent());
+		}
+		return listKurzItems;
+		
 	}
 }

@@ -4,9 +4,12 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
+
+import de.blackyellow.tennis.bespannung.BespannungSchlaegerModel;
 import de.blackyellow.tennis.bespannung.BespannungSchlaegerPresenter;
 import de.blackyellow.tennis.bespannung.BespannungSchlaegerView;
 import de.blackyellow.tennis.bespannung.BespannungSchlaegerViewImpl;
+import de.blackyellow.tennis.bespannung.BespannungsuebersichtModel;
 import de.blackyellow.tennis.bespannung.BespannungsuebersichtPresenter;
 import de.blackyellow.tennis.bespannung.BespannungsuebersichtView;
 import de.blackyellow.tennis.bespannung.BespannungsuebersichtViewImpl;
@@ -47,11 +50,13 @@ public class Tennisapp extends UI {
         navigator.addView(NeuePersonView.NEUE_PERSON, neuePersonView);
         
         BespannungsuebersichtViewImpl bespannungsView = new BespannungsuebersichtViewImpl();
-        new BespannungsuebersichtPresenter(bespannungsView);
+        BespannungsuebersichtModel bespannungsModel = new BespannungsuebersichtModel();
+		new BespannungsuebersichtPresenter(bespannungsView, bespannungsModel);
         navigator.addView(BespannungsuebersichtView.BESPANNUNGSUEBERSICHT, bespannungsView);
         
         BespannungSchlaegerViewImpl bespannungSchlaegerView = new BespannungSchlaegerViewImpl();
-        new BespannungSchlaegerPresenter(bespannungSchlaegerView);
+        BespannungSchlaegerModel bespannungSchlaegerModel = new BespannungSchlaegerModel();
+		new BespannungSchlaegerPresenter(bespannungSchlaegerView, bespannungSchlaegerModel);
         navigator.addView(BespannungSchlaegerView.BESPANNUNG_SCHLAEGER, bespannungSchlaegerView);
         
         SchlaegerDetailsViewImpl schlaegerDetailsView = new SchlaegerDetailsViewImpl();

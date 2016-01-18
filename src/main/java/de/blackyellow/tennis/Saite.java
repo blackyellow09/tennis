@@ -62,4 +62,9 @@ public class Saite implements Serializable{
 	{
 		return marke + " " + bezeichnung;
 	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
 }
