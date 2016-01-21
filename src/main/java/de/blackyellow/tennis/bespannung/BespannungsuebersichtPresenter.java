@@ -1,12 +1,7 @@
 package de.blackyellow.tennis.bespannung;
 
-import java.util.Date;
-
-import com.vaadin.data.util.BeanItemContainer;
-
 import de.blackyellow.tennis.bespannung.BespannungsuebersichtView.BespannungsuebersichtViewListener;
 import de.blackyellow.tennis.db.DatabaseHandler;
-import de.blackyellow.tennis.schlaeger.Schlaeger;
 
 public class BespannungsuebersichtPresenter implements BespannungsuebersichtViewListener{
 

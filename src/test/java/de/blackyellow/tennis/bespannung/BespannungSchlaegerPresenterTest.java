@@ -27,13 +27,13 @@ public class BespannungSchlaegerPresenterTest {
 		
 		PowerMockito.mockStatic(DatabaseHandler.class);
 		PowerMockito.when(DatabaseHandler.liefereKunde(Mockito.anyInt())).thenReturn(new Kunde(1, "vorname", "nachname"));
-		PowerMockito.when(DatabaseHandler.liefereSchlaeger(Mockito.anyInt())).thenReturn(new Schlaeger(2, "marke", "name"));
+		PowerMockito.when(DatabaseHandler.liefereSchlaegermodell(Mockito.anyInt())).thenReturn(new Schlaeger(2, "marke", "name"));
 		
 		
 		presenter.ermittleDaten("0/1/2");
 		
 		Assert.assertEquals(1, presenter.getKunde().getKundennummer());
-		Assert.assertEquals(2, presenter.getSchlaeger().getId());
+		Assert.assertEquals(2, presenter.getSchlaeger().getSchlaegerNr());
 		Assert.assertFalse(presenter.isSchlaegerEnabled());
 	}
 	
@@ -45,13 +45,13 @@ public class BespannungSchlaegerPresenterTest {
 		
 		PowerMockito.mockStatic(DatabaseHandler.class);
 		PowerMockito.when(DatabaseHandler.liefereKunde(Mockito.anyInt())).thenReturn(new Kunde(1, "vorname", "nachname"));
-		PowerMockito.when(DatabaseHandler.liefereSchlaeger(Mockito.anyInt())).thenReturn(new Schlaeger(2, "marke", "name"));
+		PowerMockito.when(DatabaseHandler.liefereSchlaegermodell(Mockito.anyInt())).thenReturn(new Schlaeger(2, "marke", "name"));
 		
 		
 		presenter.ermittleDaten("1/1/2");
 		
 		Assert.assertEquals(1, presenter.getKunde().getKundennummer());
-		Assert.assertEquals(2, presenter.getSchlaeger().getId());
+		Assert.assertEquals(2, presenter.getSchlaeger().getSchlaegerNr());
 		Assert.assertTrue(presenter.isSchlaegerEnabled());
 	}
 

@@ -1,9 +1,5 @@
 package de.blackyellow.tennis.bespannung;
 
-import com.vaadin.data.util.BeanItemContainer;
-
-import de.blackyellow.tennis.person.Kunde;
-
 public interface BespannungsuebersichtView {
 
 	interface BespannungsuebersichtViewListener
@@ -17,4 +13,6 @@ public interface BespannungsuebersichtView {
 	
 	public void addListener(BespannungsuebersichtViewListener listener);
 
+	@Override
+	String toString();
 }

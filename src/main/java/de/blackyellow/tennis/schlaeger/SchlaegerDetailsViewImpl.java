@@ -10,6 +10,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
+import de.blackyellow.tennis.util.HomeButton;
 import de.blackyellow.tennis.util.TextfieldMitUnit;
 
 public class SchlaegerDetailsViewImpl extends FormLayout implements View, SchlaegerDetailsView {
@@ -63,7 +64,7 @@ public class SchlaegerDetailsViewImpl extends FormLayout implements View, Schlae
 		HorizontalLayout hl = new HorizontalLayout();
 		hl.setSpacing(true);
 		hl.addComponent(new Button("Speichern"));
-		hl.addComponent(new Button("Zurück"));
+		hl.addComponent(new HomeButton("Abbrechen"));
 		addComponent(hl);
 		
 	}

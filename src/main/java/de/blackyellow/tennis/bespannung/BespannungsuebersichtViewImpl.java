@@ -6,7 +6,6 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
@@ -18,9 +17,7 @@ import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.blackyellow.tennis.person.Kunde;
-import de.blackyellow.tennis.person.NeuePersonView;
-import de.blackyellow.tennis.schlaeger.Schlaeger;
-import de.blackyellow.tennis.schlaeger.SchlaegerDetailsView;
+import de.blackyellow.tennis.util.HomeButton;
 
 public class BespannungsuebersichtViewImpl extends VerticalLayout implements View, BespannungsuebersichtView {
 
@@ -94,6 +91,8 @@ public class BespannungsuebersichtViewImpl extends VerticalLayout implements Vie
         });
         button.setIcon(FontAwesome.CART_PLUS);
         addComponent(button);
+        
+        addComponent(new HomeButton());
 	}
 
 	@Override
@@ -105,5 +104,9 @@ public class BespannungsuebersichtViewImpl extends VerticalLayout implements Vie
 		return model.getKunde();
 	}
 
+	@Override
+	public String toString() {
+		return BESPANNUNGSUEBERSICHT;
+	}
 
 }

@@ -20,14 +20,24 @@ public class Bespannung{
 	int quer;
 	Saite saite;
 	BigDecimal preis;
+	private int id;
 	
-	public Bespannung(Date datum, int dt, int kgLaengs, int kgQuer) {
+	public Bespannung(int id, Date datum, int dt, int kgLaengs, int kgQuer) {
+		this.id = id;
 		this.datum = datum;
 		this.dt = dt;
 		this.laengs = kgLaengs;
 		this.quer = kgQuer;
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public Date getDatum() {
 		return datum;
 	}

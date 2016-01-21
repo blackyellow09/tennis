@@ -1,7 +1,7 @@
 package de.blackyellow.tennis.bespannung;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -78,6 +78,10 @@ public class BespannungSchlaegerModel {
 	
 	public Date getAktuellstesDatum()
 	{
+		if(bespannungen == null || bespannungen.isEmpty())
+		{
+			return new java.sql.Date(Calendar.getInstance().getTime().getTime());
+		}
 		Date aktuellstesDatum = bespannungen.get(0).getDatum();
 		Iterator<Bespannung> it = bespannungen.iterator();
 		while(it.hasNext())

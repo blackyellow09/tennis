@@ -3,8 +3,6 @@ package de.blackyellow.tennis.bespannung;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.vaadin.data.fieldgroup.PropertyId;
-
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 
 public class BespannungKurzItem implements Serializable{

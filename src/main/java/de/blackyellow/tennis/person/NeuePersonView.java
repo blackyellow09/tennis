@@ -9,9 +9,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.themes.ValoTheme;
-
 import de.blackyellow.tennis.menu.UserauswahlView;
+import de.blackyellow.tennis.util.HomeButton;
 
 public class NeuePersonView extends VerticalLayout implements View {
 
@@ -40,6 +39,7 @@ public class NeuePersonView extends VerticalLayout implements View {
         addComponent(button);
         setComponentAlignment(button, Alignment.BOTTOM_LEFT);
 
+        addComponent(new HomeButton());
 	}
 
 }

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
@@ -94,10 +95,10 @@ public class DatabaseHandler {
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				int id = resultSet.getInt(1);
+				int modellNr = resultSet.getInt(1);
 				String marke = resultSet.getString(2);
 				String bezeichnung = resultSet.getString(3);
-				Schlaeger schlaeger = new Schlaeger(id, marke, bezeichnung);
+				Schlaeger schlaeger = new Schlaeger(modellNr, marke, bezeichnung);
 				listSchlaeger.add(schlaeger);
 			}
 		} catch (SQLException e) {
@@ -108,7 +109,7 @@ public class DatabaseHandler {
 		return listSchlaeger;
 	}
 	
-	public static Schlaeger liefereSchlaeger(int id)
+	public static Schlaeger liefereSchlaegermodell(int id)
 	{
 		Connection connection = DBConnection.getDBConnection();
 		Schlaeger schlaeger = null;
@@ -186,11 +187,12 @@ public class DatabaseHandler {
 			
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
+				int id = resultSet.getInt("bespannung.id");
 				Date datum = resultSet.getDate(3);
 				int dt = resultSet.getInt(4);
 				int kgLaengs = resultSet.getInt(5);
 				int kgQuer = resultSet.getInt(6);
-				Bespannung bespannung = new Bespannung(datum, dt, kgLaengs, kgQuer);
+				Bespannung bespannung = new Bespannung(id, datum, dt, kgLaengs, kgQuer);
 				bespannung.setPreis(resultSet.getBigDecimal(7));
 				Saite saite = new Saite(resultSet.getInt(8), resultSet.getString(10), resultSet.getString(11), resultSet.getString(12));
 				bespannung.setSaite(saite);
@@ -248,11 +250,12 @@ AND `Modell` = schlaegermodelle.id
 				ResultSet resultSet2 = preparedStatement.executeQuery();
 				Bespannung bespannung = null;
 				while (resultSet2.next()) {
+					int id = resultSet2.getInt("bespannung.id");
 					Date datum = resultSet2.getDate(3);
 					int dt = resultSet2.getInt(4);
 					int kgLaengs = resultSet2.getInt(5);
 					int kgQuer = resultSet2.getInt(6);
-					bespannung = new Bespannung(datum, dt, kgLaengs, kgQuer);
+					bespannung = new Bespannung(id, datum, dt, kgLaengs, kgQuer);
 					bespannung.setPreis(resultSet2.getBigDecimal(7));
 				}
 				listKurzItems.add(new BespannungKurzItem(schlaeger, bespannung));
@@ -263,6 +266,35 @@ AND `Modell` = schlaegermodelle.id
 			notification.show(Page.getCurrent());
 		}
 		return listKurzItems;
+		
+	}
+	
+	public static Schlaeger liefereSchlaeger(int schlaegerNr) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return null;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaegermodelle.* FROM `schlaeger` , schlaegermodelle WHERE schlaeger.id = ? AND `Modell` = schlaegermodelle.id;");
+			preparedStatement.setInt(1, schlaegerNr);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				int id = resultSet.getInt("schlaegermodelle.id");
+				String marke = resultSet.getString("schlaegermodelle.marke");
+				String bezeichnung = resultSet.getString("schlaegermodelle.bezeichnung");
+				Schlaeger schlaeger = new Schlaeger(id, marke, bezeichnung);
+				schlaeger.setSchlaegerNr(resultSet.getInt("schlaeger.id"));
+				return schlaeger;
+			}
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN.toString());
+			notification.show(Page.getCurrent());
+		}
+		return null;
 		
 	}
 }

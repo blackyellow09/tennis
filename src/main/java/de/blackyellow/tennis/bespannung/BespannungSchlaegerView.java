@@ -1,7 +1,5 @@
 package de.blackyellow.tennis.bespannung;
 
-import de.blackyellow.tennis.bespannung.BespannungsuebersichtView.BespannungsuebersichtViewListener;
-
 public interface BespannungSchlaegerView {
 
 	interface BespannungSchlaegerViewListener

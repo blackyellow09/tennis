@@ -1,7 +1,6 @@
 package de.blackyellow.tennis.bespannung;
 
 import de.blackyellow.tennis.bespannung.BespannungSchlaegerView.BespannungSchlaegerViewListener;
-import de.blackyellow.tennis.bespannung.BespannungsuebersichtView.BespannungsuebersichtViewListener;
 import de.blackyellow.tennis.db.DatabaseHandler;
 import de.blackyellow.tennis.person.Kunde;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
@@ -28,6 +27,11 @@ public class BespannungSchlaegerPresenter implements BespannungSchlaegerViewList
 			String schlaegerId = params[2];
 			model.setSchlaeger(DatabaseHandler.liefereSchlaeger(Integer.parseInt(schlaegerId)));
 			model.setBespannungen(DatabaseHandler.liefereBespannung(Integer.parseInt(schlaegerId)));
+		}
+		else
+		{
+			model.setSchlaeger(null);
+			model.setBespannungen(null);
 		}
 		
 		model.setKunde(DatabaseHandler.liefereKunde(Integer.parseInt(kundennr)));

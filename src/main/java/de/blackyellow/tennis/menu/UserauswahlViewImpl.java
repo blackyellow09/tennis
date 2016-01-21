@@ -4,10 +4,10 @@ package de.blackyellow.tennis.menu;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.SimpleStringFilter;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -17,7 +17,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
@@ -161,7 +160,7 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 			
 			@Override
 			public void itemClick(ItemClickEvent event) {
-				int id = ((Schlaeger)event.getItemId()).getId();
+				int id = ((Schlaeger)event.getItemId()).getModellNr();
 				getUI().getNavigator().navigateTo(SchlaegerDetailsView.SCHLAEGER_DETAILS 
                 		+ "/" + id);
 			}
@@ -189,6 +188,7 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 			@Override
 			public void itemClick(ItemClickEvent event) {
 				int id = ((Saite)event.getItemId()).getId();
+				// TODO Seite mit Details zur Seite
 				getUI().getNavigator().navigateTo(BespannungsuebersichtView.BESPANNUNGSUEBERSICHT 
                 		+ "/" + id);
 			}

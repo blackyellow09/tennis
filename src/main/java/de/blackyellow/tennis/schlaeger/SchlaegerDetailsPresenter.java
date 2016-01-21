@@ -17,7 +17,7 @@ public class SchlaegerDetailsPresenter implements SchlaegerDetailsViewListener{
 	@Override
 	public void getSchlaeger(String parameters) {
 		int id = Integer.parseInt(parameters);
-		view.setSchlaeger(DatabaseHandler.liefereSchlaeger(id));
+		view.setSchlaeger(DatabaseHandler.liefereSchlaegermodell(id));
 	}
 
 }

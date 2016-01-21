@@ -26,7 +26,6 @@ public class Schlaeger implements Serializable{
 
 	public static final String ID = "id";
 	
-	private int id;
 	private String marke;
 	private String bezeichnung;
 
@@ -39,22 +38,20 @@ public class Schlaeger implements Serializable{
 	private double seitelaenge;
 	private double gewicht;
 	private double seitenlaengeOpt;
-	private String bild;
 
 	private int schlaegerNr;
-
 	private int modellNr;
 
-	public Schlaeger(int id, String marke, String bezeichnung) {
-		this.id = id;
+	public Schlaeger(int modellNr, String marke, String bezeichnung) {
+		this.modellNr = modellNr;
 		this.marke = marke;
 		this.bezeichnung = bezeichnung;
 		this.name = marke + " " + bezeichnung;
 	}
 
-	public Schlaeger(int id, String marke, String bezeichnung, int mains, int crosses, int kopfgroesse,
+	public Schlaeger(int modellNr, String marke, String bezeichnung, int mains, int crosses, int kopfgroesse,
 			double gewicht, double seitenlaenge, double seitenlaengeOpt) {
-		this(id, marke, bezeichnung);
+		this(modellNr, marke, bezeichnung);
 		this.mains = mains;
 		this.crosses = crosses;
 		this.kopfgroesse = kopfgroesse;
@@ -63,19 +60,11 @@ public class Schlaeger implements Serializable{
 		this.seitenlaengeOpt = seitenlaengeOpt;
 	}
 
-	public Schlaeger(int id2, int modellId, int kundennummer, String marke2, String bezeichnung2, int mains2,
+	public Schlaeger(int schlaegerNr, int modellId, int kundennummer, String marke2, String bezeichnung2, int mains2,
 			int crosses2, int kopfgroesse2, double gewicht2, double seitenlaenge2, double seitenlaengeOpt2) {
 		this(kundennummer, marke2, bezeichnung2, mains2, crosses2, kopfgroesse2, gewicht2, seitenlaenge2, seitenlaengeOpt2);
-		this.setSchlaegerNr(id2);
+		this.setSchlaegerNr(schlaegerNr);
 		this.setModellNr(modellId);
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getMarke() {

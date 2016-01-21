@@ -2,48 +2,29 @@ package de.blackyellow.tennis.bespannung;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import com.vaadin.data.Container;
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.validator.AbstractValidator;
-import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.data.validator.CompositeValidator;
-import com.vaadin.data.validator.IntegerRangeValidator;
-import com.vaadin.data.validator.IntegerValidator;
-import com.vaadin.data.validator.RegexpValidator;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TableFieldFactory;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Grid.HeaderCell;
-import com.vaadin.ui.Grid.HeaderRow;
-import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.Grid;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.blackyellow.tennis.Saite;
-import de.blackyellow.tennis.bespannung.BespannungSchlaegerView.BespannungSchlaegerViewListener;
-import de.blackyellow.tennis.person.Kunde;
-import de.blackyellow.tennis.person.NeuePersonView;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
+import de.blackyellow.tennis.util.HomeButton;
 
 public class BespannungSchlaegerViewImpl extends VerticalLayout implements View, BespannungSchlaegerView {
 
@@ -72,13 +53,15 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 		}
 		else
 		{
-			ueberschrift = model.getKunde().getName() + " - Schläger " + model.getSchlaeger().getId();
+			ueberschrift = model.getKunde().getName() + " - Schläger " + model.getSchlaeger().getSchlaegerNr();
 		}
 		Label lblUeberschrift = new Label(ueberschrift);
 		lblUeberschrift.setStyleName(ValoTheme.LABEL_H2);
 		addComponent(lblUeberschrift);
 		addSchlaegerAuswahl();
 		addTableBespannungen();
+		
+		addComponent(new HomeButton());
 	}
 
 	private void addSchlaegerAuswahl() {
@@ -128,7 +111,9 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 			public Field<?> createField(Container container, Object itemId, Object propertyId, Component uiContext) {
 				Date aktuellstesDatum = model.getAktuellstesDatum();
 				boolean enable = true;
-				if(((Bespannung)itemId).getDatum().before(aktuellstesDatum))
+				Bespannung bespannung = (Bespannung)itemId;
+				if(!model.isSchlaegerEnabled() && bespannung.getId() > 0 
+						&& bespannung.getDatum().before(aktuellstesDatum))// <= 0)
 				{
 					enable = false;
 				}
@@ -138,11 +123,12 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 					cboSaite.setSizeFull();
 					cboSaite.addItems(model.getSaiten());
 //					cboSaite.addStyleName(ValoTheme.COMBOBOX_TINY);
+					cboSaite.setEnabled(enable);
 					if(!enable)
 					{
-						cboSaite.setEnabled(enable);
+						
 //						cboSaite.addStyleName(ValoTheme.COMBOBOX_BORDERLESS);
-						cboSaite.addStyleName(ValoTheme.COMBOBOX_TINY);
+						cboSaite.setStyleName(ValoTheme.COMBOBOX_TINY);
 					}
 					return cboSaite;
 				}
@@ -191,7 +177,7 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 			}
 		});
 		
-		Bespannung newItem = new Bespannung(new Date(), 0, 0, 0);
+		Bespannung newItem = new Bespannung(-1, new java.sql.Date(Calendar.getInstance().getTime().getTime()), 0, 0, 0);
 		bespannungen.addBean(newItem);
 		
 		table.setVisibleColumns(Bespannung.DATUM, Bespannung.DT,Bespannung.LAENGS, 
