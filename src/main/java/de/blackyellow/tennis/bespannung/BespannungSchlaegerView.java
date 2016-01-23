@@ -1,11 +1,17 @@
 package de.blackyellow.tennis.bespannung;
 
+import com.vaadin.data.util.BeanItemContainer;
+
+import de.blackyellow.tennis.schlaeger.Schlaeger;
+
 public interface BespannungSchlaegerView {
 
 	interface BespannungSchlaegerViewListener
 	{
 
 		BespannungSchlaegerModel ermittleDaten(String parameters);
+
+		boolean speichern(BeanItemContainer<Bespannung> container, Schlaeger object);
 
 		
 	}

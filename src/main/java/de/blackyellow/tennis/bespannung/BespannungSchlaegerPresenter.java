@@ -1,5 +1,7 @@
 package de.blackyellow.tennis.bespannung;
 
+import com.vaadin.data.util.BeanItemContainer;
+
 import de.blackyellow.tennis.bespannung.BespannungSchlaegerView.BespannungSchlaegerViewListener;
 import de.blackyellow.tennis.db.DatabaseHandler;
 import de.blackyellow.tennis.person.Kunde;
@@ -45,6 +47,21 @@ public class BespannungSchlaegerPresenter implements BespannungSchlaegerViewList
 		
 		
 		return model;
+	}
+
+	@Override
+	public boolean speichern(BeanItemContainer<Bespannung> container, Schlaeger schlaeger) {
+		if(model.isSchlaegerEnabled())
+		{
+			//neuer Schlaeger, nur 1 Bespannung
+			return DatabaseHandler.speichereNeuenSchlaeger(getKunde().getKundennummer(), schlaeger.getModellNr(), container.getIdByIndex(0));
+			
+		}
+		else
+		{
+			//ggf. eine neue Bespannung, aktuellste geändert?
+			return true;
+		}
 	}
 
 	public boolean isSchlaegerEnabled() {

@@ -1,6 +1,5 @@
 package de.blackyellow.tennis.bespannung;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +11,8 @@ import com.vaadin.data.validator.CompositeValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
@@ -22,7 +23,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.blackyellow.tennis.Saite;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 import de.blackyellow.tennis.util.HomeButton;
 
@@ -34,6 +34,8 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 	private static final long serialVersionUID = -7051374909271803147L;
 	private BespannungSchlaegerViewListener listener;
 	private BespannungSchlaegerModel model;
+	private Table table;
+	private ComboBox combobox;
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
@@ -62,13 +64,29 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 		addTableBespannungen();
 		
 		addComponent(new HomeButton());
+		addSpeichernButton();
+	}
+
+	private void addSpeichernButton() {
+		addComponent(new Button("Speichern", new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				boolean erfolgreich = listener.speichern((BeanItemContainer<Bespannung>) table.getContainerDataSource(), (Schlaeger) combobox.getValue());
+				if(erfolgreich)
+				{
+					getUI().getNavigator().navigateTo(BespannungsuebersichtView.BESPANNUNGSUEBERSICHT 
+	                		+ "/" + model.getKunde().getKundennummer());	
+				}
+			}
+		}));
 	}
 
 	private void addSchlaegerAuswahl() {
 		
 		List<Schlaeger> colSchlaeger = new ArrayList<Schlaeger>();
 		
-		ComboBox combobox = new ComboBox("Modell");
+		combobox = new ComboBox("Modell");
 		combobox.setWidth(100, Unit.PERCENTAGE);
 		if(model.isSchlaegerEnabled())
 		{
@@ -93,15 +111,8 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 	private void addTableBespannungen()
 	{
 		BeanItemContainer<Bespannung> bespannungen = model.getBespannungen();
-		BeanItemContainer<ComponentBean> container = new BeanItemContainer<BespannungSchlaegerViewImpl.ComponentBean>(ComponentBean.class);
-		for (int i = 0; i < bespannungen.size(); i++) {
-			container.addBean(new ComponentBean(bespannungen.getIdByIndex(i), new BeanItemContainer<Saite>(Saite.class)));
-			
-		}
-		Table table = new Table();
-//		table.setSizeFull();
+		table = new Table();
 		table.setWidth(100, Unit.PERCENTAGE);
-//		table.setEnabled(true);
 		table.setEditable(true);
 		table.setContainerDataSource(bespannungen);
 		
@@ -204,30 +215,4 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 		this.listener = listener;
 	}
 
-	public class ComponentBean implements Serializable
-	{
-		public static final String SAITE = "saite";
-		public static final String DATUM = "datum";
-		
-		private Bespannung bespannung;
-		private ComboBox saite = new ComboBox();
-		
-		public ComponentBean(Bespannung bespannung, BeanItemContainer<Saite> saiten) {
-			this.bespannung = bespannung;
-			saite.setContainerDataSource(saiten);
-		}
-		
-		public Date getDatum()
-		{
-			return bespannung.getDatum();
-		}
-		public ComboBox getSaite()
-		{
-			return saite;
-		}
-	}
-	
-//	AbstractValidator<Integer>("message") extends AbstractValidator<T> {
-		
-//	}
 }

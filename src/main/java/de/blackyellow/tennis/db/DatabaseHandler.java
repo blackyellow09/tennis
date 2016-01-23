@@ -297,4 +297,51 @@ AND `Modell` = schlaegermodelle.id
 		return null;
 		
 	}
+
+	public static boolean speichereNeuenSchlaeger(int kundennummer, int modellNr, Bespannung bespannung) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			int schlaegerNr = ermittleSchlaegerNr(connection, kundennummer);
+			preparedStatement = connection.prepareStatement("INSERT INTO schlaeger (ID, Kunde, Modell) VALUES(?, ?, ?);");
+			preparedStatement.setInt(1, schlaegerNr);
+			preparedStatement.setInt(2, kundennummer);
+			preparedStatement.setInt(3, modellNr);
+			int resultSet = preparedStatement.executeUpdate();
+			if(resultSet > 0)
+			{
+				preparedStatement = connection.prepareStatement("INSERT INTO bespannung (Schlaeger, Datum, DT, kgLaengs, kgQuer, Preis, Saite) VALUES(?, ?, ?, ?, ?, ?, ?);");
+				preparedStatement.setInt(1, schlaegerNr);
+				preparedStatement.setDate(2, bespannung.getDatum());
+				preparedStatement.setInt(3, bespannung.getDt());
+				preparedStatement.setInt(4, bespannung.getLaengs());
+				preparedStatement.setInt(5, bespannung.getQuer());
+				preparedStatement.setBigDecimal(6, bespannung.getPreis());
+				preparedStatement.setInt(7, bespannung.getSaite().getId());
+				preparedStatement.executeUpdate();
+			}
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN.toString());
+			notification.show(Page.getCurrent());
+			return false;
+		}
+		return true;
+	}
+
+	private static int ermittleSchlaegerNr(Connection connection, int kundennummer) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(ID) FROM `schlaeger` WHERE kunde = ?;");
+		preparedStatement.setInt(1, kundennummer);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		if (resultSet.next()) {
+			int hoechsteNr = resultSet.getInt(1);
+			return hoechsteNr+1;
+		}
+		return 1;
+	}
 }
