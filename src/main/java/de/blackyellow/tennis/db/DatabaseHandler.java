@@ -181,8 +181,7 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT * FROM bespannung, saiten WHERE schlaeger = ? "
-					+ "AND bespannung.saite = saiten.id;");
+			preparedStatement = connection.prepareStatement("SELECT * FROM bespannung WHERE schlaeger = ? ;");
 			preparedStatement.setInt(1, schlaegerId);
 			
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -194,9 +193,10 @@ public class DatabaseHandler {
 				int kgQuer = resultSet.getInt(6);
 				Bespannung bespannung = new Bespannung(id, datum, dt, kgLaengs, kgQuer);
 				bespannung.setPreis(resultSet.getBigDecimal(7));
-				Saite saite = new Saite(resultSet.getInt(8), resultSet.getString(10), resultSet.getString(11), resultSet.getString(12));
-				bespannung.setSaite(saite);
 				listBespannung.add(bespannung);
+			}
+			for (Bespannung bespannung : listBespannung) {
+				bespannung.setSaite(liefereSaite(connection, bespannung.getId()));
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_BESPANNUNG, e);
@@ -204,6 +204,26 @@ public class DatabaseHandler {
 			notification.show(Page.getCurrent());
 		}
 		return listBespannung;
+	}
+
+	private static Saite liefereSaite(Connection connection, int id) {
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT bespannung.id, saiten.* FROM bespannung, saiten WHERE bespannung.id = ? "
+					+ "AND bespannung.saite = saiten.id;");
+			preparedStatement.setInt(1, id);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if(resultSet.next())
+			{
+				return new Saite(resultSet.getInt(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5));
+			}
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITE, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SAITE.toString());
+			notification.show(Page.getCurrent());
+		}	
+		return null;
 	}
 
 	public static ArrayList<BespannungKurzItem> liefereSchlaegerZuKunde(int kundennummer) {
@@ -216,7 +236,7 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaegermodelle.* FROM `schlaeger` , schlaegermodelle WHERE `Kunde` = ? AND `Modell` = schlaegermodelle.id;");
+			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaegermodelle.*, schlaeger.nr FROM `schlaeger` , schlaegermodelle WHERE `Kunde` = ? AND `Modell` = schlaegermodelle.id;");
 			preparedStatement.setInt(1, kundennummer);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
@@ -230,14 +250,16 @@ public class DatabaseHandler {
 				double gewicht = resultSet.getDouble(8);
 				double seitenlaenge = resultSet.getDouble(9);
 				double seitenlaengeOpt = resultSet.getDouble(10);
-				listSchlaeger.add(new Schlaeger(id, modellId, kundennummer, marke, bezeichnung, mains, crosses, 
+				int nr = resultSet.getInt(11);
+				listSchlaeger.add(new Schlaeger(id, modellId, kundennummer, nr, marke, bezeichnung, mains, crosses, 
 						kopfgroesse, gewicht, seitenlaenge, seitenlaengeOpt));
 			}
 			
 			for (Schlaeger schlaeger : listSchlaeger) {
-				int schlaegerNr = schlaeger.getSchlaegerNr();
-				preparedStatement = connection.prepareStatement("SELECT * FROM bespannung WHERE  schlaeger = ? AND datum = (SELECT MAX(Datum) FROM bespannung);");
-				preparedStatement.setInt(1, schlaegerNr);
+				int schlaegerId = schlaeger.getSchlaegerId();
+				preparedStatement = connection.prepareStatement("SELECT * FROM bespannung WHERE  schlaeger = ? AND datum = (SELECT MAX(Datum) FROM bespannung WHERE  schlaeger = ?);");
+				preparedStatement.setInt(1, schlaegerId);
+				preparedStatement.setInt(2, schlaegerId);
 				ResultSet resultSet2 = preparedStatement.executeQuery();
 				Bespannung bespannung = null;
 				while (resultSet2.next()) {
@@ -268,7 +290,7 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaegermodelle.* FROM `schlaeger` , schlaegermodelle WHERE schlaeger.id = ? AND `Modell` = schlaegermodelle.id;");
+			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaeger.nr, schlaegermodelle.* FROM `schlaeger` , schlaegermodelle WHERE schlaeger.id = ? AND `Modell` = schlaegermodelle.id;");
 			preparedStatement.setInt(1, schlaegerNr);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
@@ -276,7 +298,8 @@ public class DatabaseHandler {
 				String marke = resultSet.getString("schlaegermodelle.marke");
 				String bezeichnung = resultSet.getString("schlaegermodelle.bezeichnung");
 				Schlaeger schlaeger = new Schlaeger(id, marke, bezeichnung);
-				schlaeger.setSchlaegerNr(resultSet.getInt("schlaeger.id"));
+				schlaeger.setSchlaegerNr(resultSet.getInt("schlaeger.nr"));
+				schlaeger.setSchlaegerId(resultSet.getInt("schlaeger.id"));
 				return schlaeger;
 			}
 			
@@ -298,23 +321,24 @@ public class DatabaseHandler {
 		PreparedStatement preparedStatement;
 		try {
 			int schlaegerNr = ermittleSchlaegerNr(connection, kundennummer);
-			preparedStatement = connection.prepareStatement("INSERT INTO schlaeger (ID, Kunde, Modell) VALUES(?, ?, ?);");
+			preparedStatement = connection.prepareStatement("INSERT INTO schlaeger (NR, Kunde, Modell) VALUES(?, ?, ?);");
 			preparedStatement.setInt(1, schlaegerNr);
 			preparedStatement.setInt(2, kundennummer);
 			preparedStatement.setInt(3, modellNr);
 			int resultSet = preparedStatement.executeUpdate();
 			if(resultSet > 0)
 			{
-//				preparedStatement = connection.prepareStatement("INSERT INTO bespannung (Schlaeger, Datum, DT, kgLaengs, kgQuer, Preis, Saite) VALUES(?, ?, ?, ?, ?, ?, ?);");
-//				preparedStatement.setInt(1, schlaegerNr);
-//				preparedStatement.setDate(2, bespannung.getDatum());
-//				preparedStatement.setInt(3, bespannung.getDt());
-//				preparedStatement.setInt(4, bespannung.getLaengs());
-//				preparedStatement.setInt(5, bespannung.getQuer());
-//				preparedStatement.setBigDecimal(6, bespannung.getPreis());
-//				preparedStatement.setInt(7, bespannung.getSaite().getId());
-//				preparedStatement.executeUpdate();
-				speichereBespannung(bespannung, schlaegerNr, connection);
+				int schlaegerId = liefereSchlaegerId(connection, schlaegerNr, kundennummer);
+				if(schlaegerId > 0)
+				{
+					speichereBespannung(bespannung, schlaegerId, connection);
+				}
+				else
+				{
+					logger.error(ErrorConstants.FEHLER_SPEICHERE_BESPANNUNG_ZU_NEUEN_SCHLAEGER);
+					notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_BESPANNUNG_ZU_NEUEN_SCHLAEGER.toString());
+					notification.show(Page.getCurrent());
+				}
 			}
 			
 		} catch (SQLException e) {
@@ -326,8 +350,27 @@ public class DatabaseHandler {
 		return true;
 	}
 
+	private static int liefereSchlaegerId(Connection connection, int schlaegerNr, int kundennummer) {
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT ID FROM `schlaeger` WHERE kunde = ? AND nr = ?;");
+			preparedStatement.setInt(1, kundennummer);
+			preparedStatement.setInt(2, schlaegerNr);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_SPEICHERE_BESPANNUNG_ZU_NEUEN_SCHLAEGER, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_BESPANNUNG_ZU_NEUEN_SCHLAEGER.toString());
+			notification.show(Page.getCurrent());
+		}
+		
+		return 0;
+	}
+
 	private static int ermittleSchlaegerNr(Connection connection, int kundennummer) throws SQLException {
-		PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(ID) FROM `schlaeger` WHERE kunde = ?;");
+		PreparedStatement preparedStatement = connection.prepareStatement("SELECT MAX(NR) FROM `schlaeger` WHERE kunde = ?;");
 		preparedStatement.setInt(1, kundennummer);
 		ResultSet resultSet = preparedStatement.executeQuery();
 		if (resultSet.next()) {

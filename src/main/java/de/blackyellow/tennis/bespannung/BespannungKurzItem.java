@@ -1,7 +1,7 @@
 package de.blackyellow.tennis.bespannung;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 
@@ -21,6 +21,7 @@ public class BespannungKurzItem implements Serializable{
 	public static final String BILD = Schlaeger.BILD;
 	public static final String NAME = Schlaeger.NAME;
 	public static final String ID = Schlaeger.ID;
+	public static final String NR = Schlaeger.NR;
 	
 	private Schlaeger schlaeger;
 	private Bespannung bespannung;
@@ -51,8 +52,9 @@ public class BespannungKurzItem implements Serializable{
 		return getBespannung() != null ? getBespannung().getQuer() : 0;
 	}
 	
-	public Date getDatum() {
-		return getBespannung() != null ? getBespannung().getDatum() : null;
+	public String getDatum() {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+		return getBespannung() != null ? formatter.format(getBespannung().getDatum()) : null;
 	}
 	public int getDt() {
 		return getBespannung() != null ? getBespannung().getDt() : 0;
@@ -72,6 +74,11 @@ public class BespannungKurzItem implements Serializable{
 	}
 	
 	public int getId()
+	{
+		return getSchlaeger().getSchlaegerId();
+	}
+	
+	public int getNr()
 	{
 		return getSchlaeger().getSchlaegerNr();
 	}

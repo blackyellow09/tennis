@@ -82,11 +82,11 @@ public class BespannungSchlaegerPresenter implements BespannungSchlaegerViewList
 			boolean succesUpdate = true;
 			if(neueBespannungErfasst(neueBespannung))
 			{
-				succesInsert = DatabaseHandler.speichereNeueBespannung(neueBespannung, getKunde().getKundennummer(), getSchlaeger().getSchlaegerNr());
+				succesInsert = DatabaseHandler.speichereNeueBespannung(neueBespannung, getKunde().getKundennummer(), getSchlaeger().getSchlaegerId());
 			}
 			if(aktuellsteBespannung != null)
 			{
-				succesUpdate = DatabaseHandler.updateBespannung(aktuellsteBespannung, getKunde().getKundennummer(), getSchlaeger().getSchlaegerNr());
+				succesUpdate = DatabaseHandler.updateBespannung(aktuellsteBespannung, getKunde().getKundennummer(), getSchlaeger().getSchlaegerId());
 			}
 			return succesInsert && succesUpdate;
 		}

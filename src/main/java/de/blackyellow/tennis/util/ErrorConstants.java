@@ -14,4 +14,6 @@ public class ErrorConstants {
 	public static final String FEHLER_SPEICHERE_NEUEN_SCHLAEGER = "Der neue Schläger konnte nicht gespeichert werden.";
 	public static final String FEHLER_SPEICHERE_NEUE_BESPANNUNG = "Die neu erfasste Bespannung konnte nicht gespeichert werden.";
 	public static final String FEHLER_UPDATE_BESPANNUNG = "Fehler beim aktualisieren der Bespannung.";
+	public static final String FEHLER_SPEICHERE_BESPANNUNG_ZU_NEUEN_SCHLAEGER = "Die Bespannung zu dem neu angelegtem Schläger konnte nicht gespeichert werden.";
+	public static final String FEHLER_LIEFERE_SAITE = "Fehler beim Laden der Saite.";
 }
