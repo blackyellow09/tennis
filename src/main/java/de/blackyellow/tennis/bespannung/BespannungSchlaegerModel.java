@@ -94,5 +94,24 @@ public class BespannungSchlaegerModel {
 		}
 		return aktuellstesDatum;
 	}
+	
+//	public int getAktuellsteBespannungId()
+//	{
+//		int id = 0;
+//		if(bespannungen == null || bespannungen.isEmpty())
+//		{
+//			return 0;
+//		}
+//		Iterator<Bespannung> it = bespannungen.iterator();
+//		while(it.hasNext())
+//		{
+//			int vergleichsId = it.next().getId();
+//			if(vergleichsId > id)
+//			{
+//				id = vergleichsId;
+//			}
+//		}
+//		return id;
+//	}
 
 }

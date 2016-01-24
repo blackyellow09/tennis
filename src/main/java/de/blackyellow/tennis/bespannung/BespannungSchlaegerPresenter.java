@@ -1,5 +1,7 @@
 package de.blackyellow.tennis.bespannung;
 
+import java.math.BigDecimal;
+
 import com.vaadin.data.util.BeanItemContainer;
 
 import de.blackyellow.tennis.bespannung.BespannungSchlaegerView.BespannungSchlaegerViewListener;
@@ -60,8 +62,42 @@ public class BespannungSchlaegerPresenter implements BespannungSchlaegerViewList
 		else
 		{
 			//ggf. eine neue Bespannung, aktuellste geändert?
-			return true;
+			Bespannung neueBespannung = null;
+			Bespannung aktuellsteBespannung = null;
+			for (Bespannung bespannung : container.getItemIds()) {
+				if(bespannung.getId() == -1)
+				{
+					neueBespannung = bespannung;
+				}
+				else if(bespannung.getDatum().equals(model.getAktuellstesDatum()))
+				{
+					aktuellsteBespannung = bespannung;
+				}
+				if(neueBespannung != null && aktuellsteBespannung != null)
+				{
+					break;
+				}
+			}
+			boolean succesInsert = true;
+			boolean succesUpdate = true;
+			if(neueBespannungErfasst(neueBespannung))
+			{
+				succesInsert = DatabaseHandler.speichereNeueBespannung(neueBespannung, getKunde().getKundennummer(), getSchlaeger().getSchlaegerNr());
+			}
+			if(aktuellsteBespannung != null)
+			{
+				succesUpdate = DatabaseHandler.updateBespannung(aktuellsteBespannung, getKunde().getKundennummer(), getSchlaeger().getSchlaegerNr());
+			}
+			return succesInsert && succesUpdate;
 		}
+	}
+
+	private boolean neueBespannungErfasst(Bespannung neueBespannung) {
+		return neueBespannung.getDt() > 0 
+				|| neueBespannung.getLaengs() > 0 
+				|| neueBespannung.getQuer() > 0
+				|| neueBespannung.getSaite() != null 
+				|| neueBespannung.getPreis().compareTo(BigDecimal.ZERO) > 0;
 	}
 
 	public boolean isSchlaegerEnabled() {

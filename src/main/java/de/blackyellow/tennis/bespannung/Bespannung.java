@@ -1,12 +1,17 @@
 package de.blackyellow.tennis.bespannung;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
 import de.blackyellow.tennis.Saite;
 
-public class Bespannung{
+public class Bespannung implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6490881318243112568L;
 	public static final String DATUM = "datum";
 	public static final String DT = "dt";
 	public static final String LAENGS = "laengs";
@@ -19,7 +24,7 @@ public class Bespannung{
 	int laengs;
 	int quer;
 	Saite saite;
-	BigDecimal preis;
+	BigDecimal preis = BigDecimal.ZERO;
 	private int id;
 	
 	public Bespannung(int id, Date datum, int dt, int kgLaengs, int kgQuer) {

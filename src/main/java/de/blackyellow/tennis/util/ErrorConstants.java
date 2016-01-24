@@ -9,4 +9,9 @@ public class ErrorConstants {
 	public static final String FEHLER_LIEFERE_SCHLAEGERNAMEN = "Fehler beim Laden der Schlägernamen";
 	public static final String FEHLER_LIEFERE_SAITEN = "Fehler beim Laden der Saiten";
 	public static final String FEHLER_LIEFERE_BESPANNUNG = "Fehler beim Laden der Bespannungen";
+	public static final String FEHLER_LIEFERE_SCHLAEGER_ZU_KUNDE = "Fehler beim Laden der Schläger und ihren letzten Bespannungen!";
+	public static final String FEHLER_LIEFERE_SCHLAEGER = "Fehler beim Laden es Schlägers.";
+	public static final String FEHLER_SPEICHERE_NEUEN_SCHLAEGER = "Der neue Schläger konnte nicht gespeichert werden.";
+	public static final String FEHLER_SPEICHERE_NEUE_BESPANNUNG = "Die neu erfasste Bespannung konnte nicht gespeichert werden.";
+	public static final String FEHLER_UPDATE_BESPANNUNG = "Fehler beim aktualisieren der Bespannung.";
 }

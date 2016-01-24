@@ -17,6 +17,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -63,12 +64,16 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 		addSchlaegerAuswahl();
 		addTableBespannungen();
 		
-		addComponent(new HomeButton());
-		addSpeichernButton();
+		HorizontalLayout buttons = new HorizontalLayout();
+		buttons.setSpacing(true);
+		buttons.addComponent(new HomeButton());
+		buttons.addComponent(addSpeichernButton());
+		addComponent(buttons);
+		
 	}
 
-	private void addSpeichernButton() {
-		addComponent(new Button("Speichern", new Button.ClickListener() {
+	private Button addSpeichernButton() {
+		return new Button("Speichern", new Button.ClickListener() {
 			
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -79,7 +84,7 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 	                		+ "/" + model.getKunde().getKundennummer());	
 				}
 			}
-		}));
+		});
 	}
 
 	private void addSchlaegerAuswahl() {
@@ -124,7 +129,7 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 				boolean enable = true;
 				Bespannung bespannung = (Bespannung)itemId;
 				if(!model.isSchlaegerEnabled() && bespannung.getId() > 0 
-						&& bespannung.getDatum().before(aktuellstesDatum))// <= 0)
+					&& bespannung.getDatum().before(aktuellstesDatum))// <= 0)
 				{
 					enable = false;
 				}

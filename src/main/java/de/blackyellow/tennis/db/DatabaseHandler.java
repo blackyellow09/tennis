@@ -207,15 +207,6 @@ public class DatabaseHandler {
 	}
 
 	public static ArrayList<BespannungKurzItem> liefereSchlaegerZuKunde(int kundennummer) {
-		// Schlaeger schlaeger = DatabaseHandler.liefereSchlaeger(1);
-//		Bespannung bespannung = new Bespannung(new Date(), 36, 25, 26);
-//		container.addBean(new BespannungKurzItem(schlaeger, bespannung));
-		/*
-		 * SELECT *
-FROM `schlaeger` , schlaegermodelle
-WHERE `Kunde` =1
-AND `Modell` = schlaegermodelle.id
-		 */
 		Connection connection = DBConnection.getDBConnection();
 		ArrayList<Schlaeger> listSchlaeger = new ArrayList<Schlaeger>();
 		ArrayList<BespannungKurzItem> listKurzItems = new ArrayList<BespannungKurzItem>();
@@ -261,8 +252,8 @@ AND `Modell` = schlaegermodelle.id
 				listKurzItems.add(new BespannungKurzItem(schlaeger, bespannung));
 			}
 		} catch (SQLException e) {
-			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN.toString());
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGER_ZU_KUNDE, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGER_ZU_KUNDE.toString());
 			notification.show(Page.getCurrent());
 		}
 		return listKurzItems;
@@ -290,8 +281,8 @@ AND `Modell` = schlaegermodelle.id
 			}
 			
 		} catch (SQLException e) {
-			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN.toString());
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGER, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGER.toString());
 			notification.show(Page.getCurrent());
 		}
 		return null;
@@ -314,20 +305,21 @@ AND `Modell` = schlaegermodelle.id
 			int resultSet = preparedStatement.executeUpdate();
 			if(resultSet > 0)
 			{
-				preparedStatement = connection.prepareStatement("INSERT INTO bespannung (Schlaeger, Datum, DT, kgLaengs, kgQuer, Preis, Saite) VALUES(?, ?, ?, ?, ?, ?, ?);");
-				preparedStatement.setInt(1, schlaegerNr);
-				preparedStatement.setDate(2, bespannung.getDatum());
-				preparedStatement.setInt(3, bespannung.getDt());
-				preparedStatement.setInt(4, bespannung.getLaengs());
-				preparedStatement.setInt(5, bespannung.getQuer());
-				preparedStatement.setBigDecimal(6, bespannung.getPreis());
-				preparedStatement.setInt(7, bespannung.getSaite().getId());
-				preparedStatement.executeUpdate();
+//				preparedStatement = connection.prepareStatement("INSERT INTO bespannung (Schlaeger, Datum, DT, kgLaengs, kgQuer, Preis, Saite) VALUES(?, ?, ?, ?, ?, ?, ?);");
+//				preparedStatement.setInt(1, schlaegerNr);
+//				preparedStatement.setDate(2, bespannung.getDatum());
+//				preparedStatement.setInt(3, bespannung.getDt());
+//				preparedStatement.setInt(4, bespannung.getLaengs());
+//				preparedStatement.setInt(5, bespannung.getQuer());
+//				preparedStatement.setBigDecimal(6, bespannung.getPreis());
+//				preparedStatement.setInt(7, bespannung.getSaite().getId());
+//				preparedStatement.executeUpdate();
+				speichereBespannung(bespannung, schlaegerNr, connection);
 			}
 			
 		} catch (SQLException e) {
-			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN.toString());
+			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUEN_SCHLAEGER, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUEN_SCHLAEGER.toString());
 			notification.show(Page.getCurrent());
 			return false;
 		}
@@ -343,5 +335,76 @@ AND `Modell` = schlaegermodelle.id
 			return hoechsteNr+1;
 		}
 		return 1;
+	}
+
+	public static boolean speichereNeueBespannung(Bespannung neueBespannung, int kundennummer, int schlaegerNr) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		return speichereBespannung(neueBespannung, schlaegerNr, connection);
+	}
+
+	private static boolean speichereBespannung(Bespannung neueBespannung, int schlaegerNr, Connection connection) {
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("INSERT INTO bespannung (Schlaeger, Datum, DT, kgLaengs, kgQuer, Preis, Saite) VALUES(?, ?, ?, ?, ?, ?, ?);");
+			preparedStatement.setInt(1, schlaegerNr);
+			preparedStatement.setDate(2, neueBespannung.getDatum());
+			preparedStatement.setInt(3, neueBespannung.getDt());
+			preparedStatement.setInt(4, neueBespannung.getLaengs());
+			preparedStatement.setInt(5, neueBespannung.getQuer());
+			preparedStatement.setBigDecimal(6, neueBespannung.getPreis());
+			if(neueBespannung.getSaite() != null)
+			{
+				preparedStatement.setInt(7, neueBespannung.getSaite().getId());
+			}
+			else
+			{
+				preparedStatement.setInt(7, 0);
+			}
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUE_BESPANNUNG, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUE_BESPANNUNG.toString());
+			notification.show(Page.getCurrent());
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean updateBespannung(Bespannung aktuellsteBespannung, int kundennummer, int schlaegerNr) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("UPDATE bespannung SET Schlaeger = ?, Datum = ?, DT = ?, kgLaengs = ?, kgQuer = ?, Preis = ?, Saite = ? WHERE ID = ?;");
+			preparedStatement.setInt(1, schlaegerNr);
+			preparedStatement.setDate(2, aktuellsteBespannung.getDatum());
+			preparedStatement.setInt(3, aktuellsteBespannung.getDt());
+			preparedStatement.setInt(4, aktuellsteBespannung.getLaengs());
+			preparedStatement.setInt(5, aktuellsteBespannung.getQuer());
+			preparedStatement.setBigDecimal(6, aktuellsteBespannung.getPreis());
+			if(aktuellsteBespannung.getSaite() != null)
+			{
+				preparedStatement.setInt(7, aktuellsteBespannung.getSaite().getId());
+			}
+			else
+			{
+				preparedStatement.setInt(7, 0);
+			}
+			preparedStatement.setInt(8, aktuellsteBespannung.getId());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_UPDATE_BESPANNUNG, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_BESPANNUNG.toString());
+			notification.show(Page.getCurrent());
+			return false;
+		}
+		return true;
 	}
 }
