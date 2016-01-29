@@ -1,13 +1,21 @@
 package de.blackyellow.tennis.person;
 
-public class NeuePersonPresenter {
+import de.blackyellow.tennis.db.DatabaseHandler;
+import de.blackyellow.tennis.person.NeuePersonView.NeuePersonViewListener;
 
-	private NeuePersonModel model;
+public class NeuePersonPresenter implements NeuePersonViewListener{
+
 	private NeuePersonView view;
 
-	public NeuePersonPresenter(NeuePersonModel neuePersonModel, NeuePersonView neuePersonView) {
-		this.model = neuePersonModel;
+	public NeuePersonPresenter(NeuePersonView neuePersonView) {
 		this.view = neuePersonView;
+		
+		view.addListener(this);
+	}
+
+	@Override
+	public boolean speichern(Kunde kunde) {
+		return DatabaseHandler.speichereNeuenKunden(kunde);
 	}
 
 }

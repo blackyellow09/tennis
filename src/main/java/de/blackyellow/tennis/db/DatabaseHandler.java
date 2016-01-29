@@ -450,4 +450,27 @@ public class DatabaseHandler {
 		}
 		return true;
 	}
+
+	public static boolean speichereNeuenKunden(Kunde kunde) {
+		// INSERT INTO `tennis`.`kunden` (`ID`, `Vorname`, `Nachname`) VALUES (NULL, 'Maria', 'Müller');
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`kunden` (`Vorname`, `Nachname`) VALUES (?, ?);");
+			preparedStatement.setString(1, kunde.getVorname());
+			preparedStatement.setString(2, kunde.getNachname());
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUEN_KUNDEN, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUEN_KUNDEN.toString());
+			notification.show(Page.getCurrent());
+			return false;
+		}
+		return true;
+	}
 }

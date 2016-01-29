@@ -13,9 +13,9 @@ import de.blackyellow.tennis.bespannung.BespannungsuebersichtModel;
 import de.blackyellow.tennis.bespannung.BespannungsuebersichtPresenter;
 import de.blackyellow.tennis.bespannung.BespannungsuebersichtView;
 import de.blackyellow.tennis.bespannung.BespannungsuebersichtViewImpl;
-import de.blackyellow.tennis.person.NeuePersonModel;
 import de.blackyellow.tennis.person.NeuePersonPresenter;
 import de.blackyellow.tennis.person.NeuePersonView;
+import de.blackyellow.tennis.person.NeuePersonViewImpl;
 import de.blackyellow.tennis.schlaeger.SchlaegerDetailsPresenter;
 import de.blackyellow.tennis.schlaeger.SchlaegerDetailsView;
 import de.blackyellow.tennis.schlaeger.SchlaegerDetailsViewImpl;
@@ -44,9 +44,8 @@ public class Tennisapp extends UI {
         new UserauswahlPresenter(model, view);
         navigator.addView(UserauswahlView.ROOT_VIEW, view);
         
-        NeuePersonModel neuePersonModel = new NeuePersonModel();
-        NeuePersonView neuePersonView = new NeuePersonView();
-        new NeuePersonPresenter(neuePersonModel, neuePersonView);
+        NeuePersonViewImpl neuePersonView = new NeuePersonViewImpl();
+        new NeuePersonPresenter(neuePersonView);
         navigator.addView(NeuePersonView.NEUE_PERSON, neuePersonView);
         
         BespannungsuebersichtViewImpl bespannungsView = new BespannungsuebersichtViewImpl();
