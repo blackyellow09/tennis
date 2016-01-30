@@ -7,6 +7,10 @@ public interface SchlaegerDetailsView {
 
 		void getSchlaeger(String parameters);
 
+		void createNewSchlaeger();
+
+		boolean speichern(Schlaeger schlaeger);
+
 		
 	}
 

@@ -81,7 +81,7 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
 		layout.setMargin(true);
-		layout.addComponent(addButton("Neues Schlägermodell", NeuePersonView.NEUE_PERSON));
+		layout.addComponent(addButton("Neues Schlägermodell", SchlaegerDetailsView.SCHLAEGER_DETAILS));
 		layout.addComponent(addTableSchlaeger());
 		return layout;
 	}

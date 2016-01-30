@@ -473,4 +473,61 @@ public class DatabaseHandler {
 		}
 		return true;
 	}
+
+	public static boolean speichereNeuesSchlaegermodell(Schlaeger schlaeger) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`schlaegermodelle` (`Marke`, `Bezeichnung`, `Mains`, `Crosses`, `Kopfgroesse`, `Gewicht`, `empfSeitenlaenge`, `optSeitenlaenge`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+			preparedStatement.setString(1, schlaeger.getMarke());
+			preparedStatement.setString(2, schlaeger.getBezeichnung());
+			preparedStatement.setInt(3, schlaeger.getMains());
+			preparedStatement.setInt(4, schlaeger.getCrosses());
+			preparedStatement.setInt(5, schlaeger.getKopfgroesse());
+			preparedStatement.setDouble(6, schlaeger.getGewicht());
+			preparedStatement.setDouble(7, schlaeger.getSeitelaenge());
+			preparedStatement.setDouble(8, schlaeger.getSeitenlaengeOpt());
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUES_SCHLAEGERMODELL, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUES_SCHLAEGERMODELL.toString());
+			notification.show(Page.getCurrent());
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean aktualisiereSchlaegermodell(Schlaeger schlaeger) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`schlaegermodelle` SET Marke = ?, Bezeichnung = ?, Mains = ?, Crosses = ?, Kopfgroesse = ?, Gewicht = ?, empfSeitenlaenge = ?, optSeitenlaenge = ? WHERE ID = ?;");
+			preparedStatement.setString(1, schlaeger.getMarke());
+			preparedStatement.setString(2, schlaeger.getBezeichnung());
+			preparedStatement.setInt(3, schlaeger.getMains());
+			preparedStatement.setInt(4, schlaeger.getCrosses());
+			preparedStatement.setInt(5, schlaeger.getKopfgroesse());
+			preparedStatement.setDouble(6, schlaeger.getGewicht());
+			preparedStatement.setDouble(7, schlaeger.getSeitelaenge());
+			preparedStatement.setDouble(8, schlaeger.getSeitenlaengeOpt());
+			preparedStatement.setInt(9, schlaeger.getModellNr());
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_UPDATE_SCHLAEGERMODELL, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_SCHLAEGERMODELL.toString());
+			notification.show(Page.getCurrent());
+			return false;
+		}
+		return true;
+	}
 }

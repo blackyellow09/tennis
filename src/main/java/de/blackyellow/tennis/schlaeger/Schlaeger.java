@@ -71,6 +71,9 @@ public class Schlaeger implements Serializable{
 		this.setSchlaegerId(schlaegerId);
 	}
 
+	public Schlaeger() {
+	}
+
 	public void setSchlaegerId(int schlaegerId) {
 		this.schlaegerId = schlaegerId; 
 	}

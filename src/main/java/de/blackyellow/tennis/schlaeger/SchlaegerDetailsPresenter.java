@@ -20,4 +20,23 @@ public class SchlaegerDetailsPresenter implements SchlaegerDetailsViewListener{
 		view.setSchlaeger(DatabaseHandler.liefereSchlaegermodell(id));
 	}
 
+	@Override
+	public void createNewSchlaeger() {
+		view.setSchlaeger(new Schlaeger());
+	}
+
+	@Override
+	public boolean speichern(Schlaeger schlaeger) {
+		boolean erfolgreich = false;
+		if(schlaeger.getModellNr() == 0)
+		{
+			erfolgreich = DatabaseHandler.speichereNeuesSchlaegermodell(schlaeger);
+		}
+		else
+		{
+			erfolgreich = DatabaseHandler.aktualisiereSchlaegermodell(schlaeger);
+		}
+		return erfolgreich;
+	}
+
 }

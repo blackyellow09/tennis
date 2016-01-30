@@ -4,12 +4,14 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.themes.ValoTheme;
 
+import de.blackyellow.tennis.menu.UserauswahlView;
 import de.blackyellow.tennis.util.HomeButton;
 import de.blackyellow.tennis.util.TextfieldMitUnit;
 
@@ -24,7 +26,14 @@ public class SchlaegerDetailsViewImpl extends FormLayout implements View, Schlae
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		listener.getSchlaeger(event.getParameters());
+		if(event.getParameters().isEmpty())
+		{
+			listener.createNewSchlaeger();
+		}
+		else
+		{
+			listener.getSchlaeger(event.getParameters());
+		}
 
 		if(getComponentCount() > 0)
 		{
@@ -39,10 +48,10 @@ public class SchlaegerDetailsViewImpl extends FormLayout implements View, Schlae
 		ueberschrift.setStyleName(ValoTheme.LABEL_H2);
 		addComponent(ueberschrift);
 		
-		TextField marke = new TextField("Marke", schlaeger.getMarke());
+		TextField marke = new TextField("Marke", schlaegerBean.getItemProperty(Schlaeger.MARKE));
 		marke.setRequired(true);
 		addComponent(marke);
-		TextField bezeichnung = new TextField("Bezeichnung", schlaeger.getBezeichnung());
+		TextField bezeichnung = new TextField("Bezeichnung", schlaegerBean.getItemProperty(Schlaeger.BEZEICHNUNG));
 		bezeichnung.setRequired(true);
 		bezeichnung.setWidth(100, Unit.PERCENTAGE);
 		addComponent(bezeichnung);
@@ -63,12 +72,27 @@ public class SchlaegerDetailsViewImpl extends FormLayout implements View, Schlae
 		
 		HorizontalLayout hl = new HorizontalLayout();
 		hl.setSpacing(true);
-		hl.addComponent(new Button("Speichern"));
+		hl.addComponent(addSpeichernButton());
 		hl.addComponent(new HomeButton("Abbrechen"));
 		addComponent(hl);
 		
 	}
 
+	private Button addSpeichernButton() {
+		return new Button("Speichern", new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				boolean erfolgreich = listener.speichern(schlaeger);
+				if(erfolgreich)
+				{
+					getUI().getNavigator().navigateTo(UserauswahlView.ROOT_VIEW);	
+				}
+			}
+		});
+	}
+	
 	@Override
 	public void addListener(SchlaegerDetailsViewListener listener) {
 		this.listener = listener;
