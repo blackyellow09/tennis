@@ -1,10 +1,15 @@
 package de.blackyellow.tennis.schlaeger;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -48,7 +53,7 @@ public class SchlaegerDetailsViewImpl extends FormLayout implements View, Schlae
 		ueberschrift.setStyleName(ValoTheme.LABEL_H2);
 		addComponent(ueberschrift);
 		
-		TextField marke = new TextField("Marke", schlaegerBean.getItemProperty(Schlaeger.MARKE));
+		ComboBox marke = createMarke(schlaegerBean.getItemProperty(Schlaeger.MARKE));
 		marke.setRequired(true);
 		addComponent(marke);
 		TextField bezeichnung = new TextField("Bezeichnung", schlaegerBean.getItemProperty(Schlaeger.BEZEICHNUNG));
@@ -76,6 +81,19 @@ public class SchlaegerDetailsViewImpl extends FormLayout implements View, Schlae
 		hl.addComponent(new HomeButton("Abbrechen"));
 		addComponent(hl);
 		
+	}
+
+	private ComboBox createMarke(final Property<?> property) {
+		
+		Collection<String> dataSource = new ArrayList<String>();
+		for (Marken marke : Marken.values()) {
+			dataSource.add(marke.toString());
+		}
+		final ComboBox cbo = new ComboBox("Marke", dataSource);
+		cbo.setPropertyDataSource(property);
+		cbo.setNewItemsAllowed(true);
+		cbo.setTextInputAllowed(true);
+		return cbo;
 	}
 
 	private Button addSpeichernButton() {
