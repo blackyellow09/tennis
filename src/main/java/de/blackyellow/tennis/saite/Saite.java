@@ -1,4 +1,4 @@
-package de.blackyellow.tennis;
+package de.blackyellow.tennis.saite;
 
 import java.io.Serializable;
 
@@ -10,6 +10,12 @@ public class Saite implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	public static final String NAME = "name";
+
+	public static final String MARKE = "marke";
+
+	public static final String BEZEICHNUNG = "bezeichnung";
+
+	public static final String TYP = "typ";
 	
 	private int id;
 	private String marke;
@@ -24,6 +30,9 @@ public class Saite implements Serializable{
 		this.bezeichnung = bezeichnung;
 		this.typ = typ;
 		this.name = marke + " " + bezeichnung;
+	}
+
+	public Saite() {
 	}
 
 	public int getId() {

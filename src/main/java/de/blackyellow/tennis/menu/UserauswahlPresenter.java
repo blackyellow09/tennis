@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.Notification;
 
-import de.blackyellow.tennis.Saite;
 import de.blackyellow.tennis.db.DatabaseHandler;
 import de.blackyellow.tennis.menu.UserauswahlView.UserauswahlViewListener;
 import de.blackyellow.tennis.person.Kunde;
+import de.blackyellow.tennis.saite.Saite;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 
 public class UserauswahlPresenter implements UserauswahlViewListener{

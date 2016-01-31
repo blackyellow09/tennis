@@ -2,8 +2,8 @@ package de.blackyellow.tennis.menu;
 
 import com.vaadin.data.util.BeanItemContainer;
 
-import de.blackyellow.tennis.Saite;
 import de.blackyellow.tennis.person.Kunde;
+import de.blackyellow.tennis.saite.Saite;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 
 public interface UserauswahlView {

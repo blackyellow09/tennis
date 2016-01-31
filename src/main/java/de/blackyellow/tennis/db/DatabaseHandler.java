@@ -13,10 +13,10 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 
-import de.blackyellow.tennis.Saite;
 import de.blackyellow.tennis.bespannung.Bespannung;
 import de.blackyellow.tennis.bespannung.BespannungKurzItem;
 import de.blackyellow.tennis.person.Kunde;
+import de.blackyellow.tennis.saite.Saite;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 import de.blackyellow.tennis.util.ErrorConstants;
 
@@ -525,6 +525,79 @@ public class DatabaseHandler {
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_UPDATE_SCHLAEGERMODELL, e);
 			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_SCHLAEGERMODELL.toString());
+			notification.show(Page.getCurrent());
+			return false;
+		}
+		return true;
+	}
+
+	public static Saite liefereSaite(int id) {
+		Connection connection = DBConnection.getDBConnection();
+		Saite saite = null;
+		if(connection == null)
+		{
+			return null;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT * FROM saiten WHERE ID = ?;");
+			preparedStatement.setInt(1, id);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				String marke = resultSet.getString(2);
+				String bezeichnung = resultSet.getString(3);
+				String typ = resultSet.getString(4);
+				saite = new Saite(id, marke, bezeichnung, typ);
+			}
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITE, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SAITE.toString());
+			notification.show(Page.getCurrent());
+		}
+		return saite;
+	}
+
+	public static boolean speichereNeueSaite(Saite saite) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`saiten` (`Marke`, `Bezeichnung`, Typ) VALUES (?, ?, ?);");
+			preparedStatement.setString(1, saite.getMarke());
+			preparedStatement.setString(2, saite.getBezeichnung());
+			preparedStatement.setString(3, saite.getTyp());
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUE_SAITE, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUE_SAITE.toString());
+			notification.show(Page.getCurrent());
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean aktualisiereSaite(Saite saite) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`saiten` SET Marke = ?, Bezeichnung = ?, Typ = ? WHERE ID = ?;");
+			preparedStatement.setString(1, saite.getMarke());
+			preparedStatement.setString(2, saite.getBezeichnung());
+			preparedStatement.setString(3, saite.getTyp());
+			preparedStatement.setInt(4, saite.getId());
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_UPDATE_SAITE, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_SAITE.toString());
 			notification.show(Page.getCurrent());
 			return false;
 		}

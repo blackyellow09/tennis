@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 
-import de.blackyellow.tennis.Saite;
+import de.blackyellow.tennis.saite.Saite;
 
 public class Bespannung implements Serializable{
 

@@ -23,10 +23,11 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.blackyellow.tennis.Saite;
 import de.blackyellow.tennis.bespannung.BespannungsuebersichtView;
 import de.blackyellow.tennis.person.Kunde;
 import de.blackyellow.tennis.person.NeuePersonView;
+import de.blackyellow.tennis.saite.Saite;
+import de.blackyellow.tennis.saite.SaiteDetailsView;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 import de.blackyellow.tennis.schlaeger.SchlaegerDetailsView;
 
@@ -90,7 +91,7 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
 		layout.setMargin(true);
-		layout.addComponent(addButton("Neue Saite", NeuePersonView.NEUE_PERSON));
+		layout.addComponent(addButton("Neue Saite", SaiteDetailsView.SAITE_DETAILS));
 		layout.addComponent(addTableSaiten());
 		return layout;
 	}
@@ -188,8 +189,7 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 			@Override
 			public void itemClick(ItemClickEvent event) {
 				int id = ((Saite)event.getItemId()).getId();
-				// TODO Seite mit Details zur Seite
-				getUI().getNavigator().navigateTo(BespannungsuebersichtView.BESPANNUNGSUEBERSICHT 
+				getUI().getNavigator().navigateTo(SaiteDetailsView.SAITE_DETAILS
                 		+ "/" + id);
 			}
 		});

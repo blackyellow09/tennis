@@ -16,6 +16,9 @@ import de.blackyellow.tennis.bespannung.BespannungsuebersichtViewImpl;
 import de.blackyellow.tennis.person.NeuePersonPresenter;
 import de.blackyellow.tennis.person.NeuePersonView;
 import de.blackyellow.tennis.person.NeuePersonViewImpl;
+import de.blackyellow.tennis.saite.SaiteDetailsPresenter;
+import de.blackyellow.tennis.saite.SaiteDetailsView;
+import de.blackyellow.tennis.saite.SaiteDetailsViewImpl;
 import de.blackyellow.tennis.schlaeger.SchlaegerDetailsPresenter;
 import de.blackyellow.tennis.schlaeger.SchlaegerDetailsView;
 import de.blackyellow.tennis.schlaeger.SchlaegerDetailsViewImpl;
@@ -61,6 +64,10 @@ public class Tennisapp extends UI {
         SchlaegerDetailsViewImpl schlaegerDetailsView = new SchlaegerDetailsViewImpl();
         new SchlaegerDetailsPresenter(schlaegerDetailsView);
         navigator.addView(SchlaegerDetailsView.SCHLAEGER_DETAILS, schlaegerDetailsView);
+        
+        SaiteDetailsViewImpl saiteDetailsView = new SaiteDetailsViewImpl();
+        new SaiteDetailsPresenter(saiteDetailsView);
+        navigator.addView(SaiteDetailsView.SAITE_DETAILS, saiteDetailsView);
     }
 
 
