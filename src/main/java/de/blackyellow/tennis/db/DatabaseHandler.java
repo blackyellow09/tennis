@@ -460,7 +460,7 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`kunden` (`Vorname`, `Nachname`) VALUES (?, ?);");
+			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`Kunden` (`Vorname`, `Nachname`) VALUES (?, ?);");
 			preparedStatement.setString(1, kunde.getVorname());
 			preparedStatement.setString(2, kunde.getNachname());
 			preparedStatement.executeUpdate();
