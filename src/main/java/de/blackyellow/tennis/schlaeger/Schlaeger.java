@@ -91,7 +91,7 @@ public class Schlaeger implements Serializable{
 	}
 
 	public String getBezeichnung() {
-		return bezeichnung;
+		return bezeichnung != null ? bezeichnung : "";
 	}
 
 	public void setBezeichnung(String bezeichnung) {

@@ -44,7 +44,7 @@ public class Saite implements Serializable{
 	}
 
 	public String getMarke() {
-		return marke;
+		return marke != null ? marke : "";
 	}
 
 	public void setMarke(String marke) {
@@ -52,7 +52,7 @@ public class Saite implements Serializable{
 	}
 
 	public String getBezeichnung() {
-		return bezeichnung;
+		return bezeichnung != null ? bezeichnung : "";
 	}
 
 	public void setBezeichnung(String bezeichnung) {
@@ -60,7 +60,7 @@ public class Saite implements Serializable{
 	}
 
 	public String getTyp() {
-		return typ;
+		return typ != null ? typ : "";
 	}
 
 	public void setTyp(String typ) {
