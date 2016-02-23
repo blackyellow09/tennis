@@ -13,6 +13,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import de.blackyellow.tennis.menu.UserauswahlView;
 import de.blackyellow.tennis.util.HomeButton;
+import de.blackyellow.tennis.util.TextfieldMitUnit;
 
 public class SaiteDetailsViewImpl extends FormLayout implements View, SaiteDetailsView {
 
@@ -54,6 +55,8 @@ public class SaiteDetailsViewImpl extends FormLayout implements View, SaiteDetai
 		addComponent(bezeichnung);
 		TextField typ = new TextField("Typ", saitenBean.getItemProperty(Saite.TYP));
 		addComponent(typ);
+		TextfieldMitUnit preis = new TextfieldMitUnit("Preis pro m", "€", saitenBean.getItemProperty(Saite.PREIS));
+		addComponent(preis);
 
 		HorizontalLayout hl = new HorizontalLayout();
 		hl.setSpacing(true);

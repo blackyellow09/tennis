@@ -1,6 +1,7 @@
 package de.blackyellow.tennis.saite;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class Saite implements Serializable{
 
@@ -17,19 +18,23 @@ public class Saite implements Serializable{
 
 	public static final String TYP = "typ";
 	
+	public static final String PREIS = "preis";
+	
 	private int id;
 	private String marke;
 	private String bezeichnung;
 	private String typ;
+	private BigDecimal preis = BigDecimal.ZERO;
 
 	private String name;
 
-	public Saite(int id, String marke, String bezeichnung, String typ) {
+	public Saite(int id, String marke, String bezeichnung, String typ, BigDecimal preis) {
 		this.id = id;
 		this.marke = marke;
 		this.bezeichnung = bezeichnung;
 		this.typ = typ;
 		this.name = marke + " " + bezeichnung;
+		this.preis = preis;
 	}
 
 	public Saite() {
@@ -75,5 +80,13 @@ public class Saite implements Serializable{
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	public BigDecimal getPreis() {
+		return preis != null ? preis : BigDecimal.ZERO;
+	}
+
+	public void setPreis(BigDecimal preis) {
+		this.preis = preis;
 	}
 }

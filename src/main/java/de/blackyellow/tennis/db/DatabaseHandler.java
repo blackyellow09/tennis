@@ -1,5 +1,6 @@
 package de.blackyellow.tennis.db;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -160,7 +161,8 @@ public class DatabaseHandler {
 				String marke = resultSet.getString(2);
 				String bezeichnung = resultSet.getString(3);
 				String typ = resultSet.getString(4);
-				Saite saite = new Saite(id, marke, bezeichnung, typ);
+				BigDecimal preis = resultSet.getBigDecimal(5);
+				Saite saite = new Saite(id, marke, bezeichnung, typ, preis);
 				listSaite.add(saite);
 			}
 		} catch (SQLException e) {
@@ -216,7 +218,7 @@ public class DatabaseHandler {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if(resultSet.next())
 			{
-				return new Saite(resultSet.getInt(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5));
+				return new Saite(resultSet.getInt(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getBigDecimal(6));
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITE, e);
@@ -547,7 +549,8 @@ public class DatabaseHandler {
 				String marke = resultSet.getString(2);
 				String bezeichnung = resultSet.getString(3);
 				String typ = resultSet.getString(4);
-				saite = new Saite(id, marke, bezeichnung, typ);
+				BigDecimal preis = resultSet.getBigDecimal(5);
+				saite = new Saite(id, marke, bezeichnung, typ, preis);
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITE, e);
@@ -565,10 +568,11 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`saiten` (`Marke`, `Bezeichnung`, Typ) VALUES (?, ?, ?);");
+			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`saiten` (`Marke`, `Bezeichnung`, Typ, Preis) VALUES (?, ?, ?, ?);");
 			preparedStatement.setString(1, saite.getMarke());
 			preparedStatement.setString(2, saite.getBezeichnung());
 			preparedStatement.setString(3, saite.getTyp());
+			preparedStatement.setBigDecimal(4, saite.getPreis());
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -588,11 +592,12 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`saiten` SET Marke = ?, Bezeichnung = ?, Typ = ? WHERE ID = ?;");
+			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`saiten` SET Marke = ?, Bezeichnung = ?, Typ = ?, Preis = ? WHERE ID = ?;");
 			preparedStatement.setString(1, saite.getMarke());
 			preparedStatement.setString(2, saite.getBezeichnung());
 			preparedStatement.setString(3, saite.getTyp());
-			preparedStatement.setInt(4, saite.getId());
+			preparedStatement.setBigDecimal(4, saite.getPreis());
+			preparedStatement.setInt(5, saite.getId());
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
