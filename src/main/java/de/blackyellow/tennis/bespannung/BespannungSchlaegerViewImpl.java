@@ -13,6 +13,7 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.CompositeValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -71,6 +72,7 @@ public class BespannungSchlaegerViewImpl extends TennisLayout implements View, B
 		
 		HorizontalLayout buttons = new HorizontalLayout();
 		buttons.setSpacing(true);
+		buttons.addComponent(addZurueckButton());
 		buttons.addComponent(addSpeichernButton());
 		setFooter(buttons, Alignment.MIDDLE_CENTER);
 		
@@ -89,6 +91,19 @@ public class BespannungSchlaegerViewImpl extends TennisLayout implements View, B
 				}
 			}
 		});
+	}
+	
+	private Button addZurueckButton() {
+		Button button = new Button("Schlägerübersicht", new Button.ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				getUI().getNavigator().navigateTo(BespannungsuebersichtView.BESPANNUNGSUEBERSICHT 
+                		+ "/" + model.getKunde().getKundennummer());	
+			}
+		});
+		button.setIcon(FontAwesome.ARROW_LEFT);
+		return button;
 	}
 
 	private ComboBox addSchlaegerAuswahl() {
