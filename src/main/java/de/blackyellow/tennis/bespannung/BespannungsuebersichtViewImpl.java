@@ -7,6 +7,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.data.sort.SortDirection;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
@@ -15,13 +16,12 @@ import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.blackyellow.tennis.person.Kunde;
-import de.blackyellow.tennis.util.HomeButton;
+import de.blackyellow.tennis.util.TennisLayout;
 
-public class BespannungsuebersichtViewImpl extends VerticalLayout implements View, BespannungsuebersichtView {
+public class BespannungsuebersichtViewImpl extends TennisLayout implements View, BespannungsuebersichtView {
 
 	/**
 	 * 
@@ -36,23 +36,20 @@ public class BespannungsuebersichtViewImpl extends VerticalLayout implements Vie
 
 		if(getComponentCount() > 0)
 		{
-			removeAllComponents();
+			return;
 		}
-//		setSizeFull();
-		setMargin(true);
-		setSpacing(true);
+		initDefaultLayout();
 		
 		Label ueberschrift = new Label("Schlägerübersicht von " + getKunde().getName());
 		ueberschrift.setStyleName(ValoTheme.LABEL_H2);
-		addComponent(ueberschrift);
+		setHeader(ueberschrift, Alignment.MIDDLE_CENTER);
 		
-		addComponent(addTableSchlaeger());
+		setBody(addTableSchlaeger(), Alignment.MIDDLE_CENTER, true);
 		
         HorizontalLayout buttons = new HorizontalLayout();
 		buttons.setSpacing(true);
-		buttons.addComponent(new HomeButton());
 		buttons.addComponent(addButtonNeuerSchlaeger());
-		addComponent(buttons);
+		setFooter(buttons, Alignment.MIDDLE_CENTER);
 	}
 
 	private Grid addTableSchlaeger() {

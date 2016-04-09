@@ -35,12 +35,17 @@ public class Tennisapp extends UI {
 	 */
 	private static final long serialVersionUID = 5514058771932638536L;
 
+//	ThreadLocal<Tennisapp> currentApp = new ThreadLocal<Tennisapp>();
+	
 	Navigator navigator;
 	
 	@Override
     protected void init(VaadinRequest request) {
         getPage().setTitle("Tennis-App");
         navigator = new Navigator(this, this);
+        
+//        LoginPage login = new LoginPage();
+//        navigator.addView(LoginPage.NAME, login);
         
         UserauswahlModel model = new UserauswahlModel();
         UserauswahlViewImpl view = new UserauswahlViewImpl();
@@ -68,6 +73,37 @@ public class Tennisapp extends UI {
         SaiteDetailsViewImpl saiteDetailsView = new SaiteDetailsViewImpl();
         new SaiteDetailsPresenter(saiteDetailsView);
         navigator.addView(SaiteDetailsView.SAITE_DETAILS, saiteDetailsView);
+        
+//        navigator.addViewChangeListener(new ViewChangeListener() {
+//
+//            @Override
+//            public boolean beforeViewChange(ViewChangeEvent event) {
+//
+//                // Check if a user has logged in
+//                boolean isLoggedIn = getSession().getAttribute("user") != null;
+//                boolean isLoginView = event.getNewView() instanceof LoginPage;
+//
+//                if (!isLoggedIn && !isLoginView) {
+//                    // Redirect to login view always if a user has not yet
+//                    // logged in
+//                    getNavigator().navigateTo(LoginPage.NAME);
+//                    return false;
+//
+//                } else if (isLoggedIn && isLoginView) {
+//                    // If someone tries to access to login view while logged in,
+//                    // then cancel
+//                    return false;
+//                }
+//
+//                return true;
+//            }
+//
+//			@Override
+//			public void afterViewChange(ViewChangeEvent event) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//        });
     }
 
 

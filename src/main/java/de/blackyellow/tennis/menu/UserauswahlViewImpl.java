@@ -11,13 +11,14 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.Grid.SelectionMode;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -30,8 +31,9 @@ import de.blackyellow.tennis.saite.Saite;
 import de.blackyellow.tennis.saite.SaiteDetailsView;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 import de.blackyellow.tennis.schlaeger.SchlaegerDetailsView;
+import de.blackyellow.tennis.util.TennisLayout;
 
-public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlView, View {
+public class UserauswahlViewImpl extends TennisLayout implements UserauswahlView, View {
 
 	/**
 	 * 
@@ -45,13 +47,9 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 	public void enter(ViewChangeEvent event) {
 		if(getComponentCount() > 0)
 		{
-			removeAllComponents();
+			return;
 		}
-
-		Label label = new Label("CM-super-duper-App");
-		label.setStyleName(ValoTheme.LABEL_H1);
-		addComponent(label);
-		setComponentAlignment(label, Alignment.MIDDLE_CENTER);
+		initDefaultLayout();
 		
 		TabSheet tabsheet = new TabSheet();
 		tabsheet.addStyleName(ValoTheme.TABSHEET_FRAMED);
@@ -60,17 +58,15 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 		tabsheet.addTab(addTabKunden(), "Kunden");
 		tabsheet.addTab(addTabSchlaeger(), "Schläger");
 		tabsheet.addTab(addTabSaiten(), "Saiten");
-//		tabsheet.setSizeFull();
-		
-        addComponent(tabsheet);
-	}
+		tabsheet.setHeight(28, Unit.REM);
 
+		setBody(tabsheet, Alignment.MIDDLE_CENTER, false);
+	}
 
 	private VerticalLayout addTabKunden() {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
-		layout.setMargin(true);
-		layout.setSizeFull();
+		layout.setMargin(new MarginInfo(true, true, false, true));
 		Button button = addButton("Neue Person", NeuePersonView.NEUE_PERSON);
 		layout.addComponent(button);
 		layout.setComponentAlignment(button, Alignment.MIDDLE_LEFT);
@@ -81,7 +77,7 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 	private VerticalLayout addTabSchlaeger() {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
-		layout.setMargin(true);
+		layout.setMargin(new MarginInfo(true, true, false, true));
 		layout.addComponent(addButton("Neues Schlägermodell", SchlaegerDetailsView.SCHLAEGER_DETAILS));
 		layout.addComponent(addTableSchlaeger());
 		return layout;
@@ -90,7 +86,7 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 	private VerticalLayout addTabSaiten() {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
-		layout.setMargin(true);
+		layout.setMargin(new MarginInfo(true, true, false, true));
 		layout.addComponent(addButton("Neue Saite", SaiteDetailsView.SAITE_DETAILS));
 		layout.addComponent(addTableSaiten());
 		return layout;
@@ -121,7 +117,9 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 		//Set the data source (IndexedContainer)
 		BeanItemContainer<Kunde> kunden = listeners.getKunden();
 		Grid table = new Grid();
-		table.setSizeFull();
+		table.setWidth(100, Unit.PERCENTAGE);
+		table.setHeightMode(HeightMode.ROW);
+		table.setHeightByRows(6);
 		table.setContainerDataSource(kunden);
 		table.setColumns(Kunde.NACHNAME, Kunde.VORNAME);
 		// Set the selection mode
@@ -148,7 +146,9 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 		//Set the data source (IndexedContainer)
 		BeanItemContainer<Schlaeger> schlaeger = listeners.getSchlaeger();
 		Grid table = new Grid();
-		table.setSizeFull();
+		table.setWidth(100, Unit.PERCENTAGE);
+		table.setHeightMode(HeightMode.ROW);
+		table.setHeightByRows(6);
 		table.setContainerDataSource(schlaeger);
 		table.setColumns(Schlaeger.NAME);
 		// Set the selection mode
@@ -175,7 +175,9 @@ public class UserauswahlViewImpl extends VerticalLayout implements UserauswahlVi
 		//Set the data source (IndexedContainer)
 		BeanItemContainer<Saite> saite = listeners.getSaiten();
 		Grid table = new Grid();
-		table.setSizeFull();
+		table.setWidth(100, Unit.PERCENTAGE);
+		table.setHeightMode(HeightMode.ROW);
+		table.setHeightByRows(6);
 		table.setContainerDataSource(saite);
 		table.setColumns(Saite.NAME);
 		// Set the selection mode

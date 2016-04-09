@@ -6,11 +6,15 @@ import java.util.Date;
 import java.util.List;
 
 import com.vaadin.data.Container;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.validator.CompositeValidator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
@@ -25,9 +29,9 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import de.blackyellow.tennis.schlaeger.Schlaeger;
-import de.blackyellow.tennis.util.HomeButton;
+import de.blackyellow.tennis.util.TennisLayout;
 
-public class BespannungSchlaegerViewImpl extends VerticalLayout implements View, BespannungSchlaegerView {
+public class BespannungSchlaegerViewImpl extends TennisLayout implements View, BespannungSchlaegerView {
 
 	/**
 	 * 
@@ -42,13 +46,11 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 	public void enter(ViewChangeEvent event) {
 		model = listener.ermittleDaten(event.getParameters());
 		if(getComponentCount() > 0)
-			
 		{
-			removeAllComponents();
+			return;
 		}
-
-		setSpacing(true);
-		setMargin(true);
+		initDefaultLayout();
+		
 		String ueberschrift;
 		if(model.isSchlaegerEnabled())
 		{
@@ -60,15 +62,17 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 		}
 		Label lblUeberschrift = new Label(ueberschrift);
 		lblUeberschrift.setStyleName(ValoTheme.LABEL_H2);
-		addComponent(lblUeberschrift);
-		addSchlaegerAuswahl();
-		addTableBespannungen();
+		setHeader(lblUeberschrift, Alignment.MIDDLE_CENTER);
+		
+		VerticalLayout body = new VerticalLayout();
+		body.addComponent(addSchlaegerAuswahl());
+		body.addComponent(addTableBespannungen());
+		setBody(body, Alignment.MIDDLE_CENTER, true);
 		
 		HorizontalLayout buttons = new HorizontalLayout();
 		buttons.setSpacing(true);
-		buttons.addComponent(new HomeButton());
 		buttons.addComponent(addSpeichernButton());
-		addComponent(buttons);
+		setFooter(buttons, Alignment.MIDDLE_CENTER);
 		
 	}
 
@@ -87,7 +91,7 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 		});
 	}
 
-	private void addSchlaegerAuswahl() {
+	private ComboBox addSchlaegerAuswahl() {
 		
 		List<Schlaeger> colSchlaeger = new ArrayList<Schlaeger>();
 		
@@ -109,11 +113,11 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 		combobox.setItemCaptionMode(ItemCaptionMode.PROPERTY);
 		combobox.setNullSelectionAllowed(false);
 		
-		addComponent(combobox);
+		return combobox;
 		
 	}
 	
-	private void addTableBespannungen()
+	private Table addTableBespannungen()
 	{
 		BeanItemContainer<Bespannung> bespannungen = model.getBespannungen();
 		table = new Table();
@@ -163,10 +167,25 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 				if(Bespannung.LAENGS.equals(propertyId)
 						|| Bespannung.QUER.equals(propertyId))
 				{
-					TextField textfield = new TextField();
+					final TextField textfield = new TextField();
 					textfield.setWidth(7, Unit.EM);
 					textfield.setStyleName(ValoTheme.TEXTFIELD_ALIGN_RIGHT);
 					ausgrauen(enable, textfield);
+					textfield.addValueChangeListener(new ValueChangeListener() {
+						
+						@Override
+						public void valueChange(ValueChangeEvent event) {
+							try {
+								Integer result = Integer.parseInt((String) event.getProperty().getValue());
+							} catch (NumberFormatException nfe) {
+								textfield.setValidationVisible(true);
+								throw new InvalidValueException("Ganze Zahlen");
+
+							}
+						}
+					});
+//					textfield.setConverter(new MyConverter());
+//					textfield.addValidator(new CustomIntegerRangeValidator("Bitte nur ganze Zahlen eingeben!", 0, 99));
 //					textfield.addValidator(new IntegerValidator("Bitte nur ganze Zahlen eingeben!"));
 //							new RegexpValidator("[0-9]+", "Bitte nur ganze Zahlen eingeben!"));
 					return textfield;
@@ -212,7 +231,7 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 		table.setSortAscending(false);
 		// Add filtering fields in the header
 		table.setPageLength(7);
-		addComponent(table);
+		return table;
 	}
 
 	@Override
@@ -220,4 +239,54 @@ public class BespannungSchlaegerViewImpl extends VerticalLayout implements View,
 		this.listener = listener;
 	}
 
+//	public class CustomIntegerRangeValidator implements Validator {
+//
+//	    private static final long serialVersionUID = 1L;
+//
+//	    private IntegerRangeValidator integerRangeValidator;
+//
+//	    public CustomIntegerRangeValidator(String errorMessage, Integer minValue, Integer maxValue) {
+//	        this.integerRangeValidator = new IntegerRangeValidator(errorMessage, minValue, maxValue);
+//	    }
+//
+//		@Override
+//		public void validate(Object value) throws InvalidValueException {
+//			if(!(value instanceof Integer)) 
+//			{
+//				try {
+//		            Integer result = Integer.parseInt((String) value);
+//		            integerRangeValidator.validate(result);
+//		        } catch (NumberFormatException nfe) {
+//		            throw new InvalidValueException("Ganze Zahlen");
+//		        } catch (Exception e) {
+//		            // TODO: handle exception
+//		            System.out.println("Unknown exception: " + e);
+//		        }
+//			}
+//		}
+//
+//	}
+	
+//	public class MyConverter extends StringToIntegerConverter
+//	{
+//		StringToIntegerConverter stiConv;
+//		public MyConverter() {
+//			stiConv = new StringToIntegerConverter();
+//		}
+//		
+//		@Override
+//		public Integer convertToModel(String value, Class<? extends Integer> targetType, Locale locale)
+//				throws com.vaadin.data.util.converter.Converter.ConversionException {
+//			try
+//			{
+//				return super.convertToModel(value, targetType, locale);
+//			}
+//			catch (ConversionException e)
+//			{
+//				throw new ConversionException("geht nicht");
+//			}
+//			 
+//		}
+//	}
+	
 }
