@@ -23,7 +23,7 @@ private static Notification notification;
     
 	public static Connection getDBConnection()
 	{
-		String basepath = "hostlokal";//VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+		String basepath = "host";
 		Properties props = new Properties();
 		try {
 			ClassResource externalRes = new ClassResource("dbsettings.properties");
