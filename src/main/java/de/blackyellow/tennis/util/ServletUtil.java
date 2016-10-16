@@ -26,7 +26,7 @@ public class ServletUtil {
 	}
 	
 	/**
-	 * Erzeugt aus dem übergebenen Parameter ein Objekt vom angegebenen Typ.
+	 * Erzeugt aus dem Ã¼bergebenen Parameter ein Objekt vom angegebenen Typ.
 	 * @param modellParam
 	 * @param type
 	 * @return aus Json generiertes Objekt
