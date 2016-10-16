@@ -28,7 +28,7 @@ public class DatabaseHandler {
 	public static ArrayList<Kunde> readAllKunden()
 	{
 		ResultSet resultSet = null;
-		ArrayList<Kunde> colKunde = new ArrayList<>();
+		ArrayList<Kunde> colKunde = new ArrayList<Kunde>();
 		try {
 			Connection connection = DBConnection.getDBConnection();
 			if(connection != null)
