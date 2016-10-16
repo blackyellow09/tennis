@@ -21,4 +21,6 @@ public class ErrorConstants {
 	public static final String FEHLER_UPDATE_SCHLAEGERMODELL = "Fehler beim aktualisieren des Schlaegermodells!";
 	public static final String FEHLER_SPEICHERE_NEUE_SAITE = "Fehler beim Speichern der Saite.";
 	public static final String FEHLER_UPDATE_SAITE = "Fehler beim aktualisieren der Saite.";
+	public static final String FEHLER_LIEFERE_KUNDE_ZU_SCHLAEGER = "Fehler beim Laden des Kunden zum Schläger.";
+	public static final String FEHLER_UPDATE_KUNDE = "Fehler beim aktualiseren des Kunden.";
 }

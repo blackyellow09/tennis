@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 
@@ -26,10 +25,10 @@ public class DatabaseHandler {
 	private static Logger logger = Logger.getLogger(DatabaseHandler.class);
 	private static Notification notification;
 	
-	public static BeanItemContainer<Kunde> readAllKunden()
+	public static ArrayList<Kunde> readAllKunden()
 	{
 		ResultSet resultSet = null;
-		BeanItemContainer<Kunde> colKunde = new BeanItemContainer<Kunde>(Kunde.class);
+		ArrayList<Kunde> colKunde = new ArrayList<>();
 		try {
 			Connection connection = DBConnection.getDBConnection();
 			if(connection != null)
@@ -44,7 +43,7 @@ public class DatabaseHandler {
 						int kundennummer = resultSet.getInt(1);
 						String vorname = resultSet.getString(2);
 						String nachname = resultSet.getString(3);
-						colKunde.addItem(new Kunde(kundennummer, vorname, nachname));
+						colKunde.add(new Kunde(kundennummer, vorname, nachname));
 					}
 			}
 		} catch (SQLException e) {
@@ -173,7 +172,7 @@ public class DatabaseHandler {
 		return listSaite;
 	}
 	
-	public static ArrayList<Bespannung> liefereBespannung(int schlaegerId)
+	public static ArrayList<Bespannung> liefereBespannungen(int schlaegerId)
 	{
 		Connection connection = DBConnection.getDBConnection();
 		ArrayList<Bespannung> listBespannung = new ArrayList<Bespannung>();
@@ -206,6 +205,38 @@ public class DatabaseHandler {
 			notification.show(Page.getCurrent());
 		}
 		return listBespannung;
+	}
+
+	public static Bespannung liefereBespannung(int bespId) {
+		Connection connection = DBConnection.getDBConnection();
+		Bespannung bespannung = null;
+		if(connection == null)
+		{
+			return null;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT * FROM bespannung WHERE id = ? ;");
+			preparedStatement.setInt(1, bespId);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				int id = resultSet.getInt("bespannung.id");
+				Date datum = resultSet.getDate(3);
+				int dt = resultSet.getInt(4);
+				int kgLaengs = resultSet.getInt(5);
+				int kgQuer = resultSet.getInt(6);
+				bespannung = new Bespannung(id, datum, dt, kgLaengs, kgQuer);
+				bespannung.setPreis(resultSet.getBigDecimal(7));
+				bespannung.setSchlaegerId(resultSet.getInt(2));
+				bespannung.setSaite(liefereSaite(connection, bespannung.getId()));
+			}
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_BESPANNUNG, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_BESPANNUNG.toString());
+			notification.show(Page.getCurrent());
+		}
+		return bespannung;
 	}
 
 	private static Saite liefereSaite(Connection connection, int id) {
@@ -382,7 +413,7 @@ public class DatabaseHandler {
 		return 1;
 	}
 
-	public static boolean speichereNeueBespannung(Bespannung neueBespannung, int kundennummer, int schlaegerNr) {
+	public static boolean speichereNeueBespannung(Bespannung neueBespannung, int schlaegerNr) {
 		Connection connection = DBConnection.getDBConnection();
 		if(connection == null)
 		{
@@ -419,7 +450,7 @@ public class DatabaseHandler {
 		return true;
 	}
 
-	public static boolean updateBespannung(Bespannung aktuellsteBespannung, int kundennummer, int schlaegerNr) {
+	public static boolean updateBespannung(Bespannung aktuellsteBespannung, int schlaegerId) {
 		Connection connection = DBConnection.getDBConnection();
 		if(connection == null)
 		{
@@ -428,7 +459,7 @@ public class DatabaseHandler {
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = connection.prepareStatement("UPDATE bespannung SET Schlaeger = ?, Datum = ?, DT = ?, kgLaengs = ?, kgQuer = ?, Preis = ?, Saite = ? WHERE ID = ?;");
-			preparedStatement.setInt(1, schlaegerNr);
+			preparedStatement.setInt(1, schlaegerId);
 			preparedStatement.setDate(2, aktuellsteBespannung.getDatum());
 			preparedStatement.setInt(3, aktuellsteBespannung.getDt());
 			preparedStatement.setInt(4, aktuellsteBespannung.getLaengs());
@@ -603,6 +634,57 @@ public class DatabaseHandler {
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_UPDATE_SAITE, e);
 			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_SAITE.toString());
+			notification.show(Page.getCurrent());
+			return false;
+		}
+		return true;
+	}
+
+	public static Kunde liefereKundeZuSchlaeger(int schlaegerId) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return null;
+		}
+		PreparedStatement preparedStatement;
+		Kunde kunde = null;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT kunden.id, kunden.vorname, kunden.nachname FROM `kunden`, schlaeger where kunden.ID = schlaeger.Kunde and schlaeger.ID = ? ;");
+			preparedStatement.setInt(1, schlaegerId);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				int kundennummer = resultSet.getInt(1);
+				String vorname = resultSet.getString(2);
+				String nachname = resultSet.getString(3);
+				kunde = new Kunde(kundennummer, vorname, nachname);
+			}
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_KUNDE_ZU_SCHLAEGER, e);
+//			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_SAITE.toString());
+//			notification.show(Page.getCurrent());
+			return kunde;
+		}
+		return kunde;
+	}
+
+	public static boolean updateKunde(Kunde kunde) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`Kunden` SET `Vorname` = ?, `Nachname`=? WHERE id = ?;");
+			preparedStatement.setString(1, kunde.getVorname());
+			preparedStatement.setString(2, kunde.getNachname());
+			preparedStatement.setInt(3, kunde.getKundennummer());
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_UPDATE_KUNDE, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_KUNDE.toString());
 			notification.show(Page.getCurrent());
 			return false;
 		}

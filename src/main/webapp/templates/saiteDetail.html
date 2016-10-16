@@ -1,0 +1,27 @@
+<ion-view style="" class=" " id="saiteDetail" title="Details zur Saite" ng-controller="saitenDetailCtrl">
+	<ion-content class="has-header" padding="true">
+	<ion-item id="bearbeiten-list-item-divider3" class="item-divider ">Details zur Seite</ion-item>
+		<form class="list " id="bearbeiten-formSaite" >
+			<label class="item item-input item-stacked-label"> <span
+				class="input-label">Marke</span> <input required="required" type="text"
+				placeholder="Marke" ng-model="saite.marke">
+			</label> 
+			<label class="item item-input item-stacked-label"> <span
+				class="input-label">Bezeichnung</span> <input required="required" type="text"
+				placeholder="Bezeichnung" ng-model="saite.name">
+			</label> 
+			<label class="item item-input item-stacked-label"> <span
+				class="input-label">Typ</span> <input type="text"
+				placeholder="Poly, Mono..." ng-model="saite.typ">
+			</label>
+			<label class="item item-input item-stacked-label"> <span
+				class="input-label">Preis pro m in EUR</span> <input type="number" step="0.01"
+				placeholder="Preis" ng-model="saite.preis">
+			</label>
+		</form>
+		<button class=" button button-positive  button-block "
+			id="bearbeiten-button10" ng-click="save(saite)">Speichern</button>
+			{{msg}}
+	</ion-content> 
+</ion-view>
+</body>

@@ -3,22 +3,60 @@
  xmlns="http://java.sun.com/xml/ns/javaee"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
  <display-name>Tennis-App</display-name>
- <context-param>
-  <description>Vaadin production mode</description>
-  <param-name>productionMode</param-name>
-  <param-value>false</param-value>
- </context-param>
+ <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
  <servlet>
-  <servlet-name>Tennisapp</servlet-name>
-  <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
-  <init-param>
-   <description>"Hauptmenü der Anwendung, Auswahl des Kunden</description>
-   <param-name>UI</param-name>
-   <param-value>de.blackyellow.tennis.menu.Tennisapp</param-value>
-  </init-param>
- </servlet>
- <servlet-mapping>
-  <servlet-name>Tennisapp</servlet-name>
-  <url-pattern>/*</url-pattern>
- </servlet-mapping>
+  	<servlet-name>saitenServlet</servlet-name>
+  	<servlet-class>de.blackyellow.tennis.json.SaitenServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>saitenServlet</servlet-name>
+  	<url-pattern>/saitenServlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>schlaegerServlet</servlet-name>
+  	<servlet-class>de.blackyellow.tennis.json.SchlaegerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>schlaegerServlet</servlet-name>
+  	<url-pattern>/schlaegerServlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>markenServlet</servlet-name>
+  	<servlet-class>de.blackyellow.tennis.json.MarkenServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>markenServlet</servlet-name>
+  	<url-pattern>/markenServlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>kundenServlet</servlet-name>
+  	<servlet-class>de.blackyellow.tennis.json.KundenServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>kundenServlet</servlet-name>
+  	<url-pattern>/kundenServlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>bespannungServlet</servlet-name>
+  	<servlet-class>de.blackyellow.tennis.json.BespannungServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>bespannungServlet</servlet-name>
+  	<url-pattern>/bespannungServlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>bespannungBearbeitenServlet</servlet-name>
+  	<servlet-class>de.blackyellow.tennis.json.BespannungBearbeitenServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>bespannungBearbeitenServlet</servlet-name>
+  	<url-pattern>/bespannungBearbeitenServlet/*</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+  <ion-view style="" class=" " id="page8" title="Bearbeiten">
+    <ion-content class="has-header" padding="true" ng-app="app" ng-controller="bespBearbeitenCtrl">
+        <form class="list " id="bearbeiten-form4">
+            <ion-item id="bearbeiten-list-item-divider3" class="item-divider ">
+            	<p>{{kunde.name}} - Schläger {{schlaeger.schlaegerNr}}<p>
+            	<h2>{{schlaeger.name}}</h2>
+            </ion-item>
+            <label class="item item-input"> <span
+				class="input-label">Bespannungsdatum</span><label class="item-input-wrapper">
+                <input type="text" datetime="dd.MM.yyyy" ng-model="bespannung.datum">
+            </label></label>
+            <label class="item range range-positive "> <span
+				class="input-label">DT</span>
+                {{bespannung.dt}}<input max="56" min="28" value="0" type="range" ng-model="bespannung.dt">
+            </label>
+            <label class="item range range-positive "> <span
+				class="input-label">Längssaiten</span>
+                {{bespannung.laengs}} kg<input max="40" min="20" value="26" type="range" ng-model="bespannung.laengs">
+            </label>
+            <label class="item range range-positive "> <span
+				class="input-label">Quersaiten</span>
+                {{bespannung.quer}} kg<input max="40" min="20" value="26" type="range" ng-model="bespannung.quer">
+            </label>
+            <label id="bearbeiten-select1" class="item item-input item-select ">
+                <span class="input-label">Saite</span>
+                <select required="required" ng-options="option as option.name for option in saiten track by option.id"
+				 ng-model="bespannung.saite">
+                </select>
+            </label>
+            <label class="item range range-positive "> <span
+				class="input-label">Preis</span>
+                {{bespannung.preis}} €<input max="100" min="0" value="15" type="range" ng-model="bespannung.preis">
+            </label>
+        </form>
+        <button class=" button button-positive  button-block " id="bearbeiten-button10" ng-click="save(bespannung)">Speichern</button>
+    </ion-content>
+</ion-view>
+</body>
+</html>

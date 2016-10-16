@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+<ion-view style="" class=" " id="kundeDetail" title="Infos zu Kunde" ng-controller="kundenDetailCtrl">
+	<ion-content class="has-header" padding="true">
+	<ion-item id="bearbeiten-list-item-divider3" class="item-divider ">Infos zu Kunde</ion-item>
+		<form class="list " id="bearbeiten-formModell" >
+			<label class="item item-input item-stacked-label"> <span
+				class="input-label">Vorname</span> <input required="required" type="text"
+				placeholder="Vorname" ng-model="kunde.vorname">
+			</label> 
+			<label class="item item-input item-stacked-label"> <span
+				class="input-label">Nachname</span> <input required="required" type="text"
+				placeholder="Nachname" ng-model="kunde.nachname">
+			</label> 
+		</form>
+		<button class=" button button-positive  button-block "
+			id="bearbeiten-button10" ng-click="save(kunde)">Speichern</button>
+			{{msg}}
+	</ion-content> 
+</ion-view>
+</body>
+</html>

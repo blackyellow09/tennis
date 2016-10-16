@@ -26,6 +26,7 @@ public class Bespannung implements Serializable{
 	Saite saite;
 	BigDecimal preis = BigDecimal.ZERO;
 	private int id;
+	private int schlaegerId;
 	
 	public Bespannung(int id, Date datum, int dt, int kgLaengs, int kgQuer) {
 		this.id = id;
@@ -82,5 +83,13 @@ public class Bespannung implements Serializable{
 
 	public void setPreis(BigDecimal preis) {
 		this.preis = preis;
+	}
+
+	public void setSchlaegerId(int schlaegerId) {
+		this.schlaegerId = schlaegerId;
+	}
+	
+	public int getSchlaegerId() {
+		return schlaegerId;
 	}
 }

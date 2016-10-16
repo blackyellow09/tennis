@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.Page;
-import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Notification;
 
 import de.blackyellow.tennis.util.ErrorConstants;
@@ -24,7 +23,7 @@ private static Notification notification;
     
 	public static Connection getDBConnection()
 	{
-		String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
+		String basepath = "hostlokal";//VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 		Properties props = new Properties();
 		try {
 			ClassResource externalRes = new ClassResource("dbsettings.properties");
@@ -49,11 +48,11 @@ private static Notification notification;
 		}
 		else
 		{
-			host = props.getProperty("hostlokal").toString();
-	        username = props.getProperty("usernamelokal").toString();
-	        password = props.getProperty("passwordlokal").toString();
+			host = "jdbc:mysql://localhost:3306/tennis";
+	        username = "root";
+	        password = "";
 		}
-        String driver = props.getProperty("driver").toString();
+        String driver = "com.mysql.jdbc.Driver";
 		
 		
 		Connection connection = null;

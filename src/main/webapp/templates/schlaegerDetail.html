@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+<ion-view style="" class=" " id="schlaegerDetail" title="Details zum Schl&auml;germodell" ng-controller="schlaegerDetailCtrl">
+	<ion-content class="has-header" padding="true">
+	<ion-item id="bearbeiten-list-item-divider3" class="item-divider ">Details zum Schlägermodell</ion-item>
+		<form class="list " id="bearbeiten-formModell" >
+			<label class="item item-input item-select"> <span
+				class="input-label">Marke</span> 
+				<select required="required" ng-options="option for option in marken"
+				 ng-model="modell.marke">
+				</select>
+			</label> 
+			<label class="item item-input item-stacked-label"> <span
+				class="input-label">Bezeichnung</span> <input required="required" type="text"
+				placeholder="Bezeichnung" ng-model="modell.bezeichnung">
+			</label> 
+			<label class="item range range-positive "> <span
+				class="input-label">Anzahl L&auml;ngssaiten</span> {{modell.mains}}
+				<input type="range" max="20" min="16" ng-model="modell.mains" >
+			</label>
+			<label class="item range range-positive "> <span
+				class="input-label">Anzahl Quersaiten</span>{{modell.crosses}}<input type="range"
+				ng-model="modell.crosses" max="20" min="16">
+			</label>
+			<label class="item range range-positive "> <span
+				class="input-label">Kopfgr&ouml;&szlig;e</span> {{modell.kopfgroesse}} cm&sup2; <input type="range"
+				max="800" min="200" ng-model="modell.kopfgroesse">
+			</label>
+			<label class="item range range-positive "> <span
+				class="input-label">Gewicht</span> {{modell.gewicht}} g<input type="range"
+				max="800" min="200" ng-model="modell.gewicht">
+			</label>
+			<label class="item range range-positive "> <span
+				class="input-label">Empfohlene Saitenl&auml;nge</span> {{modell.seitelaenge}} m <input type="range" step="0.1"
+				max="20" min="1" step="0.1" ng-model="modell.seitelaenge">
+			</label>
+			<label class="item range range-positive "> <span
+				class="input-label">Optimierte Saitenl&auml;nge</span> {{modell.seitenlaengeOpt}} m<input type="range" step="0.1"
+				max="20" min="1" step="0.1" ng-model="modell.seitenlaengeOpt">
+			</label>
+		</form>
+		<button class=" button button-positive  button-block "
+			id="bearbeiten-button10" ng-click="save(modell)">Speichern</button>
+			{{msg}}
+	</ion-content> 
+</ion-view>
+</body>
+</html>
