@@ -34,7 +34,7 @@ public class DatabaseHandler {
 			if(connection != null)
 			{
 				PreparedStatement preparedStatement = connection
-						.prepareStatement("SELECT * FROM Kunden;");
+						.prepareStatement("SELECT * FROM kunden;");
 				
 					resultSet = preparedStatement.executeQuery();
 					
@@ -64,7 +64,7 @@ public class DatabaseHandler {
 		
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT * FROM Kunden WHERE id = ?;");
+			preparedStatement = connection.prepareStatement("SELECT * FROM kunden WHERE id = ?;");
 			preparedStatement.setInt(1, kundennummer);
 
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -493,7 +493,7 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`Kunden` (`Vorname`, `Nachname`) VALUES (?, ?);");
+			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`kunden` (`Vorname`, `Nachname`) VALUES (?, ?);");
 			preparedStatement.setString(1, kunde.getVorname());
 			preparedStatement.setString(2, kunde.getNachname());
 			preparedStatement.executeUpdate();
@@ -676,7 +676,7 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`Kunden` SET `Vorname` = ?, `Nachname`=? WHERE id = ?;");
+			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`kunden` SET `Vorname` = ?, `Nachname`=? WHERE id = ?;");
 			preparedStatement.setString(1, kunde.getVorname());
 			preparedStatement.setString(2, kunde.getNachname());
 			preparedStatement.setInt(3, kunde.getKundennummer());
