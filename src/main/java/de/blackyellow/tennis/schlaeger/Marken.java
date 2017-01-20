@@ -12,7 +12,9 @@ public enum Marken {
 	PROKENNEX("ProKennex"),
 	TECNIFIBRE("Tecnifibre"),
 	VOLKL("Volkl"),
-	YONEX("Yonex");
+	YONEX("Yonex"),
+	CRANE("Crane"),
+	SONSTIGE("Sonstige");
 	
 	private String name;
 
