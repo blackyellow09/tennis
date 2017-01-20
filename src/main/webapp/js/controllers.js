@@ -308,4 +308,42 @@ angular.module('app.controllers', [])
 		});
 	}
 })
+
+.controller('neuerSchlaegerCtrl', function($scope, $stateParams, $http, MyURL, $state) {
+
+	var parameter = $stateParams.kundenNr;
+	$http({
+		url : MyURL.host+'schlaegerZuordnungServlet',
+		method : 'POST',
+		params : {
+			id : parameter
+		},
+		headers : {
+			'Content-Type' : 'application/json;charset=utf-8'
+		}
+	}).success(function(data) {
+		$scope.kunde = data.kunde;
+		$scope.schlaegermodelle = data.schlaeger;
+	}).error(function(data, status, headers, config) {
+
+	});
+	
+	$scope.save = function(kunde, schlaeger){
+		$http({
+	 		url : MyURL.host+'neuerSchlaegerServlet',
+	 		method : 'POST',
+	 		params : {
+	 			kundenId : kunde.kundennummer,
+	 			schlaegerId: schlaeger.modellNr,
+	 		},
+	 		headers : {
+	 			'Content-Type' : 'application/json;charset=utf-8'
+	 		}
+	 	}).success(function(data) {
+ 			$state.go('cMSuperDuperApp.schlaegeruebersicht', {kundenId: kunde.kundennummer});
+	 	}).error(function(data, status, headers, config) {
+	 	});
+	}
+	
+})
  

@@ -117,6 +117,16 @@ angular.module('app.routes', [])
       }
     }
   })
+  
+  .state('cMSuperDuperApp.neuerSchlaeger', {
+    url: '/neuerSchlaeger/:kundenNr',
+    views: {
+      'tab1': {
+        templateUrl: 'templates/neuerSchlaeger.html',
+        controller: 'neuerSchlaegerCtrl'
+      }
+    }
+  })
 
 $urlRouterProvider.otherwise('/page1/page2')
 

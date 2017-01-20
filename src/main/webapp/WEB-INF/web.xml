@@ -59,4 +59,20 @@
   	<servlet-name>bespannungBearbeitenServlet</servlet-name>
   	<url-pattern>/bespannungBearbeitenServlet/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+  	<servlet-name>schlaegerZuordnungServlet</servlet-name>
+  	<servlet-class>de.blackyellow.tennis.json.SchlaegerZuordnungServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>schlaegerZuordnungServlet</servlet-name>
+  	<url-pattern>/schlaegerZuordnungServlet/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+  	<servlet-name>neuerSchlaegerServlet</servlet-name>
+  	<servlet-class>de.blackyellow.tennis.json.NeuerSchlaegerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>neuerSchlaegerServlet</servlet-name>
+  	<url-pattern>/neuerSchlaegerServlet/*</url-pattern>
+  </servlet-mapping>
 </web-app>

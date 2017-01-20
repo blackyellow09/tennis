@@ -359,7 +359,7 @@ public class DatabaseHandler {
 			preparedStatement.setInt(2, kundennummer);
 			preparedStatement.setInt(3, modellNr);
 			int resultSet = preparedStatement.executeUpdate();
-			if(resultSet > 0)
+			if(resultSet > 0 && bespannung != null)
 			{
 				int schlaegerId = liefereSchlaegerId(connection, schlaegerNr, kundennummer);
 				if(schlaegerId > 0)
