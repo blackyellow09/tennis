@@ -15,6 +15,7 @@
             <ion-item style="" id="bespannung.id" ng-repeat="bespannung in bespannungen.bespannungen | orderBy:'-datum'" class="item-icon-right  ">
                 <span class="item-note">{{bespannung.datum | date: 'dd.MM.yyyy'}}</span>
                 <h2>{{bespannung.saite.name}}</h2>
+                <h2 ng-show="bespannung.isHybrid">Quer: {{bespannung.saiteQuer.name}}</h2>
                 <p>Längsseiten: {{bespannung.laengs}} kg</p>
                 <p>Querseiten: {{bespannung.quer}} kg</p>
                 <p>DT: {{bespannung.dt}}</p>

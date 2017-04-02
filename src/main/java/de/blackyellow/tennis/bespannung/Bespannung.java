@@ -18,6 +18,7 @@ public class Bespannung implements Serializable{
 	public static final String QUER = "quer";
 	public static final String SAITE = "saite";
 	public static final String PREIS = "preis";
+	public static final String SAITEQUER = "saiteQuer";
 	
 	Date datum;
 	int dt;
@@ -27,6 +28,8 @@ public class Bespannung implements Serializable{
 	BigDecimal preis = BigDecimal.ZERO;
 	private int id;
 	private int schlaegerId;
+	private boolean isHybrid;
+	Saite saiteQuer;
 	
 	public Bespannung(int id, Date datum, int dt, int kgLaengs, int kgQuer) {
 		this.id = id;
@@ -91,5 +94,21 @@ public class Bespannung implements Serializable{
 	
 	public int getSchlaegerId() {
 		return schlaegerId;
+	}
+
+	public void setHybrid(boolean isHybrid) {
+		this.isHybrid = isHybrid;
+	}
+	
+	public boolean isHybrid() {
+		return isHybrid;
+	}
+
+	public void setSaiteQuer(Saite saiteQuer) {
+		this.saiteQuer = saiteQuer;
+	}
+	
+	public Saite getSaiteQuer() {
+		return saiteQuer;
 	}
 }

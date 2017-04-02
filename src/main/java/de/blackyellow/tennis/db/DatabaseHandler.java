@@ -193,11 +193,18 @@ public class DatabaseHandler {
 				int kgLaengs = resultSet.getInt(5);
 				int kgQuer = resultSet.getInt(6);
 				Bespannung bespannung = new Bespannung(id, datum, dt, kgLaengs, kgQuer);
+				bespannung.setSchlaegerId(resultSet.getInt("bespannung.schlaeger"));
 				bespannung.setPreis(resultSet.getBigDecimal(7));
+				int saiteQuer = resultSet.getInt("bespannung.SaiteQuer");
+				bespannung.setHybrid(saiteQuer > 0);
 				listBespannung.add(bespannung);
 			}
 			for (Bespannung bespannung : listBespannung) {
 				bespannung.setSaite(liefereSaite(connection, bespannung.getId()));
+				if(bespannung.isHybrid())
+				{
+					bespannung.setSaiteQuer(liefereSaiteQuer(connection, bespannung.getId()));
+				}
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_BESPANNUNG, e);
@@ -230,6 +237,12 @@ public class DatabaseHandler {
 				bespannung.setPreis(resultSet.getBigDecimal(7));
 				bespannung.setSchlaegerId(resultSet.getInt(2));
 				bespannung.setSaite(liefereSaite(connection, bespannung.getId()));
+				int saiteQuer = resultSet.getInt("bespannung.SaiteQuer");
+				bespannung.setHybrid(saiteQuer > 0);
+				if(bespannung.isHybrid())
+				{
+					bespannung.setSaiteQuer(liefereSaiteQuer(connection, bespannung.getId()));
+				}
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_BESPANNUNG, e);
@@ -244,6 +257,26 @@ public class DatabaseHandler {
 		try {
 			preparedStatement = connection.prepareStatement("SELECT bespannung.id, saiten.* FROM bespannung, saiten WHERE bespannung.id = ? "
 					+ "AND bespannung.saite = saiten.id;");
+			preparedStatement.setInt(1, id);
+			
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if(resultSet.next())
+			{
+				return new Saite(resultSet.getInt(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getBigDecimal(6));
+			}
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITE, e);
+			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SAITE.toString());
+			notification.show(Page.getCurrent());
+		}	
+		return null;
+	}
+	
+	private static Saite liefereSaiteQuer(Connection connection, int id) {
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT bespannung.id, saiten.* FROM bespannung, saiten WHERE bespannung.id = ? "
+					+ "AND bespannung.saiteQuer = saiten.id;");
 			preparedStatement.setInt(1, id);
 			
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -425,7 +458,7 @@ public class DatabaseHandler {
 	private static boolean speichereBespannung(Bespannung neueBespannung, int schlaegerNr, Connection connection) {
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("INSERT INTO bespannung (Schlaeger, Datum, DT, kgLaengs, kgQuer, Preis, Saite) VALUES(?, ?, ?, ?, ?, ?, ?);");
+			preparedStatement = connection.prepareStatement("INSERT INTO bespannung (Schlaeger, Datum, DT, kgLaengs, kgQuer, Preis, Saite, SaiteQuer) VALUES(?, ?, ?, ?, ?, ?, ?, ?);");
 			preparedStatement.setInt(1, schlaegerNr);
 			preparedStatement.setDate(2, neueBespannung.getDatum());
 			preparedStatement.setInt(3, neueBespannung.getDt());
@@ -439,6 +472,14 @@ public class DatabaseHandler {
 			else
 			{
 				preparedStatement.setInt(7, 0);
+			}
+			if(neueBespannung.getSaiteQuer() != null)
+			{
+				preparedStatement.setInt(8, neueBespannung.getSaiteQuer().getId());
+			}
+			else
+			{
+				preparedStatement.setInt(8, 0);
 			}
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
@@ -458,7 +499,7 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("UPDATE bespannung SET Schlaeger = ?, Datum = ?, DT = ?, kgLaengs = ?, kgQuer = ?, Preis = ?, Saite = ? WHERE ID = ?;");
+			preparedStatement = connection.prepareStatement("UPDATE bespannung SET Schlaeger = ?, Datum = ?, DT = ?, kgLaengs = ?, kgQuer = ?, Preis = ?, Saite = ?, SaiteQuer = ? WHERE ID = ?;");
 			preparedStatement.setInt(1, schlaegerId);
 			preparedStatement.setDate(2, aktuellsteBespannung.getDatum());
 			preparedStatement.setInt(3, aktuellsteBespannung.getDt());
@@ -473,7 +514,15 @@ public class DatabaseHandler {
 			{
 				preparedStatement.setInt(7, 0);
 			}
-			preparedStatement.setInt(8, aktuellsteBespannung.getId());
+			if(aktuellsteBespannung.getSaiteQuer() != null)
+			{
+				preparedStatement.setInt(8, aktuellsteBespannung.getSaiteQuer().getId());
+			}
+			else
+			{
+				preparedStatement.setInt(8, 0);
+			}
+			preparedStatement.setInt(9, aktuellsteBespannung.getId());
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_UPDATE_BESPANNUNG, e);
