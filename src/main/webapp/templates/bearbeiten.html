@@ -33,11 +33,17 @@
 				 ng-model="bespannung.saite">
                 </select>
             </label>
-            <label id="bearbeiten-select2" class="item item-input item-select ">
-                	<span><input type="checkbox" ng-model="bespannung.isHybrid"> Hybridsaite</span>
+            <div class="row item">
+			  <div class="col input-label">Hybridsaite</div>
+			  <div class="col checkbox"><input type="checkbox" ng-model="bespannung.isHybrid"></div>
+			  <div class="col item-select"><select ng-disabled="!bespannung.isHybrid" required="bespannung.isHybrid" ng-options="option as option.name for option in saiten track by option.id"
+				 	ng-model="bespannung.saiteQuer"></select></div>
+			</div>
+			<!-- <label id="bearbeiten-select2" class="item item-input item-select ">
+                	<span class="item-input"><input type="checkbox" ng-model="bespannung.isHybrid"> Hybridsaite</span>
                 	<span><select ng-disabled="!bespannung.isHybrid" required="bespannung.isHybrid" ng-options="option as option.name for option in saiten track by option.id"
 				 	ng-model="bespannung.saiteQuer"></select></span>
-			</label>
+			</label>-->
             <label class="item range range-positive "> <span
 				class="input-label">Preis</span>
                 {{bespannung.preis}} €<input max="100" min="0" value="15" type="range" ng-model="bespannung.preis">
