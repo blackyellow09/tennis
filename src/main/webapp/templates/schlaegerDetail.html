@@ -10,7 +10,7 @@
 		<form class="list " id="bearbeiten-formModell" >
 			<label class="item item-input item-select"> <span
 				class="input-label">Marke</span> 
-				<select required="required" ng-options="option for option in marken"
+				<select required="required" ng-options="option as option.name for option in marken track by option.id"
 				 ng-model="modell.marke">
 				</select>
 			</label> 

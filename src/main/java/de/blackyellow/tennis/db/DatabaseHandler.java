@@ -10,20 +10,17 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import com.vaadin.server.Page;
-import com.vaadin.ui.Notification;
-
 import de.blackyellow.tennis.bespannung.Bespannung;
 import de.blackyellow.tennis.bespannung.BespannungKurzItem;
 import de.blackyellow.tennis.person.Kunde;
 import de.blackyellow.tennis.saite.Saite;
+import de.blackyellow.tennis.schlaeger.Marke;
 import de.blackyellow.tennis.schlaeger.Schlaeger;
 import de.blackyellow.tennis.util.ErrorConstants;
 
 public class DatabaseHandler {
 
 	private static Logger logger = Logger.getLogger(DatabaseHandler.class);
-	private static Notification notification;
 	
 	public static ArrayList<Kunde> readAllKunden()
 	{
@@ -48,8 +45,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_KUNDEN, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_KUNDEN.toString());
-			notification.show(Page.getCurrent());
 		}
 		return colKunde;
 	}
@@ -75,8 +70,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_KUNDE, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_KUNDE.toString());
-			notification.show(Page.getCurrent());
 		}
 		return kunde;
 	}
@@ -91,22 +84,46 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT ID, Marke, Bezeichnung FROM schlaegermodelle;");
+			preparedStatement = connection.prepareStatement("SELECT schlaegermodelle.ID, schlaegermodelle.Bezeichnung, marken.* FROM schlaegermodelle, marken WHERE schlaegermodelle.marke = marken.id;");
 
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				int modellNr = resultSet.getInt(1);
-				String marke = resultSet.getString(2);
-				String bezeichnung = resultSet.getString(3);
+				String bezeichnung = resultSet.getString(2);
+				Marke marke = new Marke(resultSet.getInt("marken.id"), resultSet.getString("marken.Name"), resultSet.getString("marken.URL"));
 				Schlaeger schlaeger = new Schlaeger(modellNr, marke, bezeichnung);
 				listSchlaeger.add(schlaeger);
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN.toString());
-			notification.show(Page.getCurrent());
 		}
 		return listSchlaeger;
+	}
+	
+	public static ArrayList<Marke> liefereMarken()
+	{
+		Connection connection = DBConnection.getDBConnection();
+		ArrayList<Marke> listMarken = new ArrayList<Marke>();
+		if(connection == null)
+		{
+			return listMarken;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT * FROM marken;");
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				String url = resultSet.getString(3);
+				Marke marke = new Marke(id, name, url);
+				listMarken.add(marke);
+			}
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN, e);
+		}
+		return listMarken;
 	}
 	
 	public static Schlaeger liefereSchlaegermodell(int id)
@@ -119,11 +136,11 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT * FROM schlaegermodelle WHERE ID = ?;");
+			preparedStatement = connection.prepareStatement("SELECT * FROM schlaegermodelle, marken WHERE schlaegermodelle.ID = ? "
+					+ "and schlaegermodelle.marke = marken.id;");
 			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
-				String marke = resultSet.getString(2);
 				String bezeichnung = resultSet.getString(3);
 				int mains = resultSet.getInt(4);
 				int crosses = resultSet.getInt(5);
@@ -131,13 +148,12 @@ public class DatabaseHandler {
 				double gewicht = resultSet.getDouble(7);
 				double seitenlaenge = resultSet.getDouble(8);
 				double seitenlaengeOpt = resultSet.getDouble(9);
+				Marke marke = new Marke(resultSet.getInt("marken.id"), resultSet.getString("marken.Name"), resultSet.getString("URL"));
 				schlaeger = new Schlaeger(id, marke, bezeichnung, mains, crosses, 
 						kopfgroesse, gewicht, seitenlaenge, seitenlaengeOpt);
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGERNAMEN.toString());
-			notification.show(Page.getCurrent());
 		}
 		return schlaeger;
 	}
@@ -166,8 +182,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITEN, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SAITEN.toString());
-			notification.show(Page.getCurrent());
 		}
 		return listSaite;
 	}
@@ -208,8 +222,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_BESPANNUNG, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_BESPANNUNG.toString());
-			notification.show(Page.getCurrent());
 		}
 		return listBespannung;
 	}
@@ -246,8 +258,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_BESPANNUNG, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_BESPANNUNG.toString());
-			notification.show(Page.getCurrent());
 		}
 		return bespannung;
 	}
@@ -266,8 +276,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITE, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SAITE.toString());
-			notification.show(Page.getCurrent());
 		}	
 		return null;
 	}
@@ -286,8 +294,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITE, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SAITE.toString());
-			notification.show(Page.getCurrent());
 		}	
 		return null;
 	}
@@ -302,13 +308,13 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaegermodelle.*, schlaeger.nr FROM `schlaeger` , schlaegermodelle WHERE `Kunde` = ? AND `Modell` = schlaegermodelle.id;");
+			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaegermodelle.*, schlaeger.nr, marken.*"
+					+ " FROM `schlaeger` , schlaegermodelle, marken WHERE `Kunde` = ? AND `Modell` = schlaegermodelle.id and marke = marken.Id;");
 			preparedStatement.setInt(1, kundennummer);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				int id = resultSet.getInt(1);
 				int modellId = resultSet.getInt(2);
-				String marke = resultSet.getString(3);
 				String bezeichnung = resultSet.getString(4);
 				int mains = resultSet.getInt(5);
 				int crosses = resultSet.getInt(6);
@@ -317,6 +323,7 @@ public class DatabaseHandler {
 				double seitenlaenge = resultSet.getDouble(9);
 				double seitenlaengeOpt = resultSet.getDouble(10);
 				int nr = resultSet.getInt(11);
+				Marke marke = new Marke(resultSet.getInt("marken.id"), resultSet.getString("marken.Name"), resultSet.getString("marken.URL"));
 				listSchlaeger.add(new Schlaeger(id, modellId, kundennummer, nr, marke, bezeichnung, mains, crosses, 
 						kopfgroesse, gewicht, seitenlaenge, seitenlaengeOpt));
 			}
@@ -341,8 +348,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGER_ZU_KUNDE, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGER_ZU_KUNDE.toString());
-			notification.show(Page.getCurrent());
 		}
 		return listKurzItems;
 		
@@ -356,12 +361,13 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaeger.nr, schlaegermodelle.* FROM `schlaeger` , schlaegermodelle WHERE schlaeger.id = ? AND `Modell` = schlaegermodelle.id;");
+			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaeger.nr, schlaegermodelle.id, schlaegermodelle.bezeichnung, marken.*"
+					+ " FROM `schlaeger` , schlaegermodelle, marken WHERE schlaeger.id = ? AND `Modell` = schlaegermodelle.id and marke = marken.id;");
 			preparedStatement.setInt(1, schlaegerNr);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				int id = resultSet.getInt("schlaegermodelle.id");
-				String marke = resultSet.getString("schlaegermodelle.marke");
+				Marke marke = new Marke(resultSet.getInt("marken.id"), resultSet.getString("marken.Name"), resultSet.getString("marken.URL"));
 				String bezeichnung = resultSet.getString("schlaegermodelle.bezeichnung");
 				Schlaeger schlaeger = new Schlaeger(id, marke, bezeichnung);
 				schlaeger.setSchlaegerNr(resultSet.getInt("schlaeger.nr"));
@@ -371,8 +377,6 @@ public class DatabaseHandler {
 			
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGER, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SCHLAEGER.toString());
-			notification.show(Page.getCurrent());
 		}
 		return null;
 		
@@ -402,15 +406,11 @@ public class DatabaseHandler {
 				else
 				{
 					logger.error(ErrorConstants.FEHLER_SPEICHERE_BESPANNUNG_ZU_NEUEN_SCHLAEGER);
-					notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_BESPANNUNG_ZU_NEUEN_SCHLAEGER.toString());
-					notification.show(Page.getCurrent());
 				}
 			}
 			
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUEN_SCHLAEGER, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUEN_SCHLAEGER.toString());
-			notification.show(Page.getCurrent());
 			return false;
 		}
 		return true;
@@ -428,8 +428,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_SPEICHERE_BESPANNUNG_ZU_NEUEN_SCHLAEGER, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_BESPANNUNG_ZU_NEUEN_SCHLAEGER.toString());
-			notification.show(Page.getCurrent());
 		}
 		
 		return 0;
@@ -484,8 +482,6 @@ public class DatabaseHandler {
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUE_BESPANNUNG, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUE_BESPANNUNG.toString());
-			notification.show(Page.getCurrent());
 			return false;
 		}
 		return true;
@@ -526,8 +522,6 @@ public class DatabaseHandler {
 			preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_UPDATE_BESPANNUNG, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_BESPANNUNG.toString());
-			notification.show(Page.getCurrent());
 			return false;
 		}
 		return true;
@@ -549,8 +543,6 @@ public class DatabaseHandler {
 			
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUEN_KUNDEN, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUEN_KUNDEN.toString());
-			notification.show(Page.getCurrent());
 			return false;
 		}
 		return true;
@@ -565,7 +557,7 @@ public class DatabaseHandler {
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`schlaegermodelle` (`Marke`, `Bezeichnung`, `Mains`, `Crosses`, `Kopfgroesse`, `Gewicht`, `empfSeitenlaenge`, `optSeitenlaenge`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-			preparedStatement.setString(1, schlaeger.getMarke());
+			preparedStatement.setInt(1, schlaeger.getMarke().getId());
 			preparedStatement.setString(2, schlaeger.getBezeichnung());
 			preparedStatement.setInt(3, schlaeger.getMains());
 			preparedStatement.setInt(4, schlaeger.getCrosses());
@@ -577,8 +569,6 @@ public class DatabaseHandler {
 			
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUES_SCHLAEGERMODELL, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUES_SCHLAEGERMODELL.toString());
-			notification.show(Page.getCurrent());
 			return false;
 		}
 		return true;
@@ -593,7 +583,7 @@ public class DatabaseHandler {
 		PreparedStatement preparedStatement;
 		try {
 			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`schlaegermodelle` SET Marke = ?, Bezeichnung = ?, Mains = ?, Crosses = ?, Kopfgroesse = ?, Gewicht = ?, empfSeitenlaenge = ?, optSeitenlaenge = ? WHERE ID = ?;");
-			preparedStatement.setString(1, schlaeger.getMarke());
+			preparedStatement.setInt(1, schlaeger.getMarke().getId());
 			preparedStatement.setString(2, schlaeger.getBezeichnung());
 			preparedStatement.setInt(3, schlaeger.getMains());
 			preparedStatement.setInt(4, schlaeger.getCrosses());
@@ -606,8 +596,6 @@ public class DatabaseHandler {
 			
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_UPDATE_SCHLAEGERMODELL, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_SCHLAEGERMODELL.toString());
-			notification.show(Page.getCurrent());
 			return false;
 		}
 		return true;
@@ -634,8 +622,6 @@ public class DatabaseHandler {
 			}
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITE, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_LIEFERE_SAITE.toString());
-			notification.show(Page.getCurrent());
 		}
 		return saite;
 	}
@@ -657,8 +643,6 @@ public class DatabaseHandler {
 			
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUE_SAITE, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_SPEICHERE_NEUE_SAITE.toString());
-			notification.show(Page.getCurrent());
 			return false;
 		}
 		return true;
@@ -682,8 +666,6 @@ public class DatabaseHandler {
 			
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_UPDATE_SAITE, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_SAITE.toString());
-			notification.show(Page.getCurrent());
 			return false;
 		}
 		return true;
@@ -710,8 +692,6 @@ public class DatabaseHandler {
 			
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_KUNDE_ZU_SCHLAEGER, e);
-//			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_SAITE.toString());
-//			notification.show(Page.getCurrent());
 			return kunde;
 		}
 		return kunde;
@@ -733,8 +713,6 @@ public class DatabaseHandler {
 			
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_UPDATE_KUNDE, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_UPDATE_KUNDE.toString());
-			notification.show(Page.getCurrent());
 			return false;
 		}
 		return true;

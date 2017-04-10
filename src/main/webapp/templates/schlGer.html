@@ -16,8 +16,8 @@
         
         <ion-list class=" " id="schlaeger-list2" ng-app="app" ng-controller="schlaegerCtrl">
             <ion-item style="" id="modell.modellNr" class="item-thumbnail-left  " ui-sref="cMSuperDuperApp.schlaegerDetail({modellId: modell.modellNr})" ng-repeat="modell in schlaeger | filter:searchText">
-                <img src="img/ZCNg5b1oRteX28sGMXo0_HEAD_tennis.jpg">
-                <h2>{{modell.marke}}</h2>
+                <img src={{modell.marke.urlLogo}}>
+                <h2>{{modell.marke.name}}</h2>
                 <p>{{modell.bezeichnung}}</p>
             </ion-item>
         </ion-list>

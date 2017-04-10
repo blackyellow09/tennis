@@ -28,7 +28,8 @@ public class Schlaeger implements Serializable{
 
 	public static final String NR = "nr";
 	
-	private String marke;
+	@PropertyId(MARKE)
+	private Marke marke;
 	private String bezeichnung;
 
 	@PropertyId(NAME)
@@ -45,14 +46,14 @@ public class Schlaeger implements Serializable{
 	private int schlaegerNr;
 	private int modellNr;
 
-	public Schlaeger(int modellNr, String marke, String bezeichnung) {
+	public Schlaeger(int modellNr, Marke marke, String bezeichnung) {
 		this.modellNr = modellNr;
 		this.marke = marke;
 		this.bezeichnung = bezeichnung;
 		this.name = marke + " " + bezeichnung;
 	}
 
-	public Schlaeger(int modellNr, String marke, String bezeichnung, int mains, int crosses, int kopfgroesse,
+	public Schlaeger(int modellNr, Marke marke, String bezeichnung, int mains, int crosses, int kopfgroesse,
 			double gewicht, double seitenlaenge, double seitenlaengeOpt) {
 		this(modellNr, marke, bezeichnung);
 		this.mains = mains;
@@ -63,9 +64,9 @@ public class Schlaeger implements Serializable{
 		this.seitenlaengeOpt = seitenlaengeOpt;
 	}
 
-	public Schlaeger(int schlaegerId, int modellId, int kundennummer, int schlaegerNr, String marke2, String bezeichnung2, int mains2,
+	public Schlaeger(int schlaegerId, int modellId, int kundennummer, int schlaegerNr, Marke marke, String bezeichnung2, int mains2,
 			int crosses2, int kopfgroesse2, double gewicht2, double seitenlaenge2, double seitenlaengeOpt2) {
-		this(kundennummer, marke2, bezeichnung2, mains2, crosses2, kopfgroesse2, gewicht2, seitenlaenge2, seitenlaengeOpt2);
+		this(kundennummer, marke, bezeichnung2, mains2, crosses2, kopfgroesse2, gewicht2, seitenlaenge2, seitenlaengeOpt2);
 		this.setSchlaegerNr(schlaegerNr);
 		this.setModellNr(modellId);
 		this.setSchlaegerId(schlaegerId);
@@ -82,12 +83,12 @@ public class Schlaeger implements Serializable{
 		return schlaegerId;
 	}
 
-	public String getMarke() {
+	public Marke getMarke() {
 		return marke;
 	}
 
-	public void setMarke(String marke) {
-		this.marke = marke;
+	public void setMarke(Marke markeDetails) {
+		this.marke = markeDetails;
 	}
 
 	public String getBezeichnung() {
@@ -100,7 +101,7 @@ public class Schlaeger implements Serializable{
 	
 	public String getName()
 	{
-		name = marke + " " + bezeichnung;
+		name = getMarke().getName() + " " + bezeichnung;
 		return name;
 	}
 

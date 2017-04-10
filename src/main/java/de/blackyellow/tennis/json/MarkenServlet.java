@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-import de.blackyellow.tennis.schlaeger.Marken;
+import de.blackyellow.tennis.db.DatabaseHandler;
+import de.blackyellow.tennis.schlaeger.Marke;
 
 public class MarkenServlet extends HttpServlet {
 
@@ -21,11 +22,7 @@ public class MarkenServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		Marken[] values = Marken.values();
-		ArrayList<String> marken = new ArrayList<String>();
-		for (Marken marke : values) {
-			marken.add(marke.toString());
-		}
+		ArrayList<Marke> marken = DatabaseHandler.liefereMarken();
 		Gson gson = new Gson();
 		String mainObject = gson.toJson(marken);
 
