@@ -10,7 +10,7 @@
         </form>
         <button class=" button button-positive  button-block " id="saiten-button6" ui-sref="cMSuperDuperApp.saiteDetail">Neue Saite</button>
         <ion-list class=" " id="saiten-list3" ng-app="app" ng-controller="saitenCtrl">
-        	<ion-item style="" id="saite.id" ui-sref="cMSuperDuperApp.saiteDetail({saitenId: saite.id})" class="item-thumbnail-left  " ng-repeat="saite in saiten | filter:searchText">
+        	<ion-item style="" id="saite.id" ui-sref="cMSuperDuperApp.saiteDetail({saitenId: saite.id})" class="item-thumbnail-left  " ng-repeat="saite in saiten | orderBy:'marke' | filter:searchText">
                 <h2>{{saite.marke}}</h2>
                 <p>{{saite.bezeichnung}}</p>
                 <p>{{saite.typ}}</p>

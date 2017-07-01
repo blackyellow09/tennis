@@ -8,7 +8,7 @@
         </form>
         <button class=" button button-positive  button-block " id="kunden-button1" ui-sref="cMSuperDuperApp.kundeDetail">Neuer Kunde</button>
         <ion-list class=" " id="kunden-list" ng-app="app" ng-controller="kundenCtrl">
-            <ion-item style="" id="kunde.kundennummer" class="item-icon-left" ui-sref="cMSuperDuperApp.schlaegeruebersicht({kundenId: kunde.kundennummer})" ng-repeat="kunde in kunden | filter:searchText">
+            <ion-item style="" id="kunde.kundennummer" class="item-icon-left" ui-sref="cMSuperDuperApp.schlaegeruebersicht({kundenId: kunde.kundennummer})" ng-repeat="kunde in kunden | orderBy:'name' | filter:searchText">
                 <i class="icon ion-android-person"></i>{{kunde.name}}</ion-item>
         </ion-list>
         <div class=" button-bar " id="kunden-button-bar1"></div>

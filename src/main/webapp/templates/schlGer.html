@@ -15,7 +15,7 @@
         <button class=" button button-positive  button-block " id="schlGer-button5" ui-sref="cMSuperDuperApp.schlaegerDetail">Neues Schlägermodell</button>
         
         <ion-list class=" " id="schlaeger-list2" ng-app="app" ng-controller="schlaegerCtrl">
-            <ion-item style="" id="modell.modellNr" class="item-thumbnail-left  " ui-sref="cMSuperDuperApp.schlaegerDetail({modellId: modell.modellNr})" ng-repeat="modell in schlaeger | filter:searchText">
+            <ion-item style="" id="modell.modellNr" class="item-thumbnail-left  " ui-sref="cMSuperDuperApp.schlaegerDetail({modellId: modell.modellNr})" ng-repeat="modell in schlaeger | orderBy:'marke.name' |filter:searchText">
                 <img src={{modell.marke.urlLogo}}>
                 <h2>{{modell.marke.name}}</h2>
                 <p>{{modell.bezeichnung}}</p>
