@@ -7,7 +7,7 @@
   <ion-view style="" class=" " id="page6" title="Bespannungsübersicht">
     <ion-content class="has-header" padding="true" ng-app="app" ng-controller="bespannungenCtrl">
     <div class="item item-divider">
-    	<p>{{bespannungen.kunde.name}} - Schläger {{bespannungen.schlaeger.schlaegerNr}}</p>
+    	<p>{{bespannungen.kunde.name}} - Schläger {{bespannungen.schlaeger.schlaegerNr}} ({{bespannungen.bespannungen.length}} Bespannungen)</p>
     	<h2>{{bespannungen.schlaeger.name}}</h2>
    	</div>
         <a class=" button button-positive  button-block " id="saskiaNeidSchlGer2-button9" ui-sref="cMSuperDuperApp.bespBearbeiten({schlaegerId: schlaegerId})">Neue Bespannung</a>
