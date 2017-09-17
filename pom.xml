@@ -7,8 +7,8 @@
 	<name>tennis</name>
 	<repositories>
 		<repository>
-			<id>eap</id>
-			<url>http://maven.repository.redhat.com/techpreview/all</url>
+			<id>jboss-eap-repository-group</id>
+			<url>https://maven.repository.redhat.com/ga/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -19,8 +19,8 @@
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
-			<id>eap</id>
-			<url>http://maven.repository.redhat.com/techpreview/all</url>
+			<id>jboss-eap-repository-group</id>
+			<url>https://maven.repository.redhat.com/ga/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
