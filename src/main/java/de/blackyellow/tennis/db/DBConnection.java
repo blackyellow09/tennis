@@ -12,14 +12,12 @@ import org.apache.log4j.Logger;
 
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.Page;
-import com.vaadin.ui.Notification;
 
 import de.blackyellow.tennis.util.ErrorConstants;
 
 public class DBConnection {
 
 private static Logger logger = Logger.getLogger(DBConnection.class);
-private static Notification notification;
     
 	public static Connection getDBConnection()
 	{
@@ -62,12 +60,8 @@ private static Notification notification;
 
 		} catch (ClassNotFoundException e) {
 			logger.error(ErrorConstants.FEHLER_DB_CONNECTION, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_DB_CONNECTION.toString());
-			notification.show(Page.getCurrent());
 		} catch (SQLException e) {
 			logger.error(ErrorConstants.FEHLER_DB_CONNECTION, e);
-			notification = new Notification("Fehler!", ErrorConstants.FEHLER_DB_CONNECTION.toString());
-			notification.show(Page.getCurrent());
 		}
 		return connection;
 	}
