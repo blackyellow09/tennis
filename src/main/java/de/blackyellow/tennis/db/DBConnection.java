@@ -40,7 +40,8 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 		String password;
 		if(basepath.equals("/localhost"))
 		{
-			host = props.getProperty("host").toString();
+			String getenv = System.getenv("MYSQL_SERVICE_HOST");
+			host = "jdbc:mysql://"+getenv+":3306/tennis";
 	        username = props.getProperty("username").toString();
 	        password = props.getProperty("password").toString();
 		}
