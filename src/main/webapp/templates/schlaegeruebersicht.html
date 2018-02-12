@@ -9,7 +9,7 @@
     <div class="item item-divider">
     	<p>{{item.kunde.name}}
     	<i class="icon ion-edit" ui-sref="cMSuperDuperApp.kundeBearbeiten({kundenNr: item.kunde.kundennummer})"></i>
-    	   {{item.schlaeger.length}} Schläger<!-- , x Bespannungen --></p>
+    	   {{item.schlaeger.length}} Schläger, {{item.anzahlBespannungenGesamt}} Bespannungen gesamt</p>
    	</div>
         <a class=" button button-positive  button-block icon-left ion-plus " id="bespannungen-button7" ui-sref="cMSuperDuperApp.neuerSchlaeger({kundenNr: item.kunde.kundennummer})">Neuer Schläger</a>
         <ion-list class=" " id="i.schlaeger.schlaegerId" ng-repeat="i in item.schlaeger">

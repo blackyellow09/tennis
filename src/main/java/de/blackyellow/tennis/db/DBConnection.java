@@ -10,9 +10,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import com.vaadin.server.ClassResource;
-import com.vaadin.server.Page;
-
 import de.blackyellow.tennis.util.ErrorConstants;
 
 public class DBConnection {
@@ -24,7 +21,6 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 		String basepath = "/localhost";
 		Properties props = new Properties();
 		try {
-			ClassResource externalRes = new ClassResource("dbsettings.properties");
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			BufferedInputStream bis = new BufferedInputStream(classLoader.getResourceAsStream("dbsettings.properties"));
 			props.load(bis);
@@ -47,18 +43,17 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 		}
 		else
 		{
-			host = "jdbc:mysql://localhost:3306/tennis";
+			host = "jdbc:mysql://localhost:3306/tennis?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	        username = "root";
 	        password = "";
 		}
-        String driver = "com.mysql.jdbc.Driver";
+        String driver = "com.mysql.cj.jdbc.Driver";
 		
 		
 		Connection connection = null;
 		try {
 			Class.forName(driver);
 			connection = DriverManager.getConnection(host, username, password);
-
 		} catch (ClassNotFoundException e) {
 			logger.error(ErrorConstants.FEHLER_DB_CONNECTION, e);
 		} catch (SQLException e) {

@@ -353,6 +353,41 @@ public class DatabaseHandler {
 		
 	}
 	
+	public static int liefereAnzahlBespannungenZuKunde(int kundenNr) {
+		Connection connection = DBConnection.getDBConnection();
+		ArrayList<Integer> listSchlaeger = new ArrayList<Integer>();
+		int summeBespannungen = 0;
+		if(connection == null)
+		{
+			return summeBespannungen;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT schlaeger.id"
+					+ " FROM `schlaeger` WHERE `Kunde` = ? ;");
+			preparedStatement.setInt(1, kundenNr);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				listSchlaeger.add(id);
+			}
+			
+			for (Integer schlaeger : listSchlaeger) {
+				int schlaegerId = schlaeger;
+				preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM bespannung WHERE  schlaeger = ? ;");
+				preparedStatement.setInt(1, schlaegerId);
+				ResultSet resultSet2 = preparedStatement.executeQuery();
+				while (resultSet2.next()) {
+					int id = resultSet2.getInt(1);
+					summeBespannungen = summeBespannungen + id;
+				}
+			}
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_SCHLAEGER_ZU_KUNDE, e);
+		}
+		return summeBespannungen;
+	}
+
 	public static Schlaeger liefereSchlaeger(int schlaegerNr) {
 		Connection connection = DBConnection.getDBConnection();
 		if(connection == null)

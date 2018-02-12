@@ -2,8 +2,6 @@ package de.blackyellow.tennis.person;
 
 import java.io.Serializable;
 
-import com.vaadin.data.fieldgroup.PropertyId;
-
 public class Kunde implements Serializable{
 
 	/**
@@ -19,13 +17,10 @@ public class Kunde implements Serializable{
 
 	private int kundennummer;
 	
-	@PropertyId(VORNAME)
 	private String vorname;
 	
-	@PropertyId(NACHNAME)
 	private String nachname;
 	
-	@PropertyId(NAME)
 	private String name;
 	
 	public Kunde(int kundennummer, String vorname, String nachname) {

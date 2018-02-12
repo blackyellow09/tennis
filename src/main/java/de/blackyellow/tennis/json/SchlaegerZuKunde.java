@@ -9,10 +9,12 @@ public class SchlaegerZuKunde {
 
 	private Kunde kunde;
 	private ArrayList<BespannungKurzItem> schlaeger;
+	private int anzahlBespannungenGesamt;
 
-	public SchlaegerZuKunde(Kunde kunde, ArrayList<BespannungKurzItem> schlaeger) {
+	public SchlaegerZuKunde(Kunde kunde, ArrayList<BespannungKurzItem> schlaeger, int anzahlBespannungen) {
 		this.kunde = kunde;
 		this.schlaeger = schlaeger;
+		this.anzahlBespannungenGesamt = anzahlBespannungen;
 	}
 
 }

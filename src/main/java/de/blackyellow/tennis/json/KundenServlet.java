@@ -58,7 +58,8 @@ public class KundenServlet extends HttpServlet {
 			else
 			{
 				ArrayList<BespannungKurzItem> schlaeger = DatabaseHandler.liefereSchlaegerZuKunde(kundenNr);
-				SchlaegerZuKunde schlaegerZuKunde = new SchlaegerZuKunde(kunde, schlaeger);
+				int anzahlBespannungen = DatabaseHandler.liefereAnzahlBespannungenZuKunde(kundenNr);
+				SchlaegerZuKunde schlaegerZuKunde = new SchlaegerZuKunde(kunde, schlaeger, anzahlBespannungen);
 				json = gson.toJson(schlaegerZuKunde);
 			}
 			System.out.println(json);

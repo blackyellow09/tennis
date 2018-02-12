@@ -2,8 +2,6 @@ package de.blackyellow.tennis.schlaeger;
 
 import java.io.Serializable;
 
-import com.vaadin.data.fieldgroup.PropertyId;
-
 public class Schlaeger implements Serializable{
 
 	/**
@@ -28,11 +26,9 @@ public class Schlaeger implements Serializable{
 
 	public static final String NR = "nr";
 	
-	@PropertyId(MARKE)
 	private Marke marke;
 	private String bezeichnung;
 
-	@PropertyId(NAME)
 	private String name;
 
 	private int mains;
