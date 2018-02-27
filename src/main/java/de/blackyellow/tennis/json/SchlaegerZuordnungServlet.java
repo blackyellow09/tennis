@@ -1,6 +1,7 @@
 package de.blackyellow.tennis.json;
 
 import static de.blackyellow.tennis.util.ServletUtil.getParameter;
+import static de.blackyellow.tennis.util.ServletUtil.prepareResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,8 +34,7 @@ public class SchlaegerZuordnungServlet extends HttpServlet {
 			KundeUndSchlaegernamen kundeUndSchlaegernamen = new KundeUndSchlaegernamen(kunde, schlaeger);
 			String json = gson.toJson(kundeUndSchlaegernamen);
 			System.out.println(json);
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
+			prepareResponse(resp);
 			resp.getWriter().write(json);
 	}
 }

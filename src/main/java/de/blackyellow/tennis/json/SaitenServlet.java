@@ -6,6 +6,7 @@ import static de.blackyellow.tennis.db.DatabaseHandler.liefereSaiten;
 import static de.blackyellow.tennis.db.DatabaseHandler.speichereNeueSaite;
 import static de.blackyellow.tennis.util.ServletUtil.createObjectFromJson;
 import static de.blackyellow.tennis.util.ServletUtil.getParameter;
+import static de.blackyellow.tennis.util.ServletUtil.prepareResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,8 +30,7 @@ public class SaitenServlet extends HttpServlet {
 
 	      System.out.println(mainObject);
 	      
-	      resp.setContentType("application/json");
-	      resp.setCharacterEncoding("UTF-8");
+	      prepareResponse(resp);
 	      resp.getWriter().write(mainObject);
 	}
 
@@ -52,8 +52,7 @@ public class SaitenServlet extends HttpServlet {
 				Gson gson = new Gson();
 				String json = gson.toJson(saite);
 				System.out.println(json);
-				resp.setContentType("application/json");
-				resp.setCharacterEncoding("UTF-8");
+				prepareResponse(resp);
 				resp.getWriter().write(json);
 			}
 		}

@@ -3,6 +3,7 @@ package de.blackyellow.tennis.util;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,5 +36,12 @@ public class ServletUtil {
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		T fromJson = gson.fromJson(modellParam, type);
 		return fromJson;
+	}
+	
+	public static void prepareResponse(HttpServletResponse response)
+	{
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.setHeader("Access-Control-Allow-Origin", "http://tennis.blackyellow.de");
 	}
 }

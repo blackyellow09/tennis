@@ -3,6 +3,7 @@ package de.blackyellow.tennis.json;
 import static de.blackyellow.tennis.db.DatabaseHandler.liefereKundeZuSchlaeger;
 import static de.blackyellow.tennis.util.ServletUtil.createObjectFromJson;
 import static de.blackyellow.tennis.util.ServletUtil.getParameter;
+import static de.blackyellow.tennis.util.ServletUtil.prepareResponse;
 
 import java.io.IOException;
 
@@ -49,8 +50,7 @@ public class BespannungBearbeitenServlet extends HttpServlet {
 				
 				System.out.println(json);
 				
-				resp.setContentType("application/json");
-				resp.setCharacterEncoding("UTF-8");
+				prepareResponse(resp);
 				resp.getWriter().write(json);
 			}
 		}
@@ -71,8 +71,7 @@ public class BespannungBearbeitenServlet extends HttpServlet {
 			
 			System.out.println(json);
 			
-			resp.setContentType("application/json");
-			resp.setCharacterEncoding("UTF-8");
+			prepareResponse(resp);
 			resp.getWriter().write(json);
 		}
 	}

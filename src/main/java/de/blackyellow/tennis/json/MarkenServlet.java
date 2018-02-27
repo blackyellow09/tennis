@@ -1,5 +1,7 @@
 package de.blackyellow.tennis.json;
 
+import static de.blackyellow.tennis.util.ServletUtil.prepareResponse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -26,8 +28,7 @@ public class MarkenServlet extends HttpServlet {
 		Gson gson = new Gson();
 		String mainObject = gson.toJson(marken);
 
-		resp.setContentType("application/json");
-		resp.setCharacterEncoding("UTF-8");
+		prepareResponse(resp);
 		resp.getWriter().write(mainObject);
 	}
 
