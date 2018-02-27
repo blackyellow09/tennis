@@ -31,6 +31,7 @@ public class KundenServlet extends HttpServlet {
 	      
 	      resp.setContentType("application/json");
 	      resp.setCharacterEncoding("UTF-8");
+	      resp.setHeader("Access-Control-Allow-Origin", "http://tennis.blackyellow.de");
 	      resp.getWriter().write(mainObject);
 	}
 
@@ -66,6 +67,7 @@ public class KundenServlet extends HttpServlet {
 			
 			resp.setContentType("application/json");
 			resp.setCharacterEncoding("UTF-8");
+			resp.setHeader("Access-Control-Allow-Origin", "http://tennis.blackyellow.de");
 			resp.getWriter().write(json);
 		}
 		else if(isKundendatenVorhanden(kundeParam))
