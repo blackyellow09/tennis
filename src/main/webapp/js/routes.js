@@ -41,6 +41,16 @@ angular.module('app.routes', [])
     }
   })
 
+  .state('cMSuperDuperApp.schlaegerBearbeiten', {
+    url: '/schlaeger/:schlaegerId',
+    views: {
+      'tab1': {
+        templateUrl: 'templates/schlaegerBearbeiten.html',
+        controller: 'schlaegerBearbeiten'
+      }
+    }
+  })
+  
   .state('cMSuperDuperApp.schlaeger', {
     url: '/page3',
     views: {

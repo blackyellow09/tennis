@@ -57,6 +57,35 @@ angular.module('app.controllers', [])
 		});
 	}
 })
+
+.controller('schlaegerBearbeiten', function($scope, $stateParams, $http, $state, MyURL) {
+	var parameter = $stateParams.schlaegerId;
+
+	$scope.$on('$ionicView.enter', function() {		
+		$scope.modelle = null;
+		$http.get(MyURL.host+'schlaegerServlet')
+				.success(function(data) {
+					$scope.modelle = data;
+				}).error(function(data, status, headers, config) {
+				});
+		});
+	/*
+	$http({
+		url : MyURL.host+'schlaegerBearbeitenServlet',
+		method : 'POST',
+		params : {
+			id : parameter
+		},
+		headers : {
+			'Content-Type' : 'application/json;charset=utf-8'
+		}
+	}).success(function(data) {
+		$scope.kunde = data;
+	}).error(function(data, status, headers, config) {
+
+	});*/
+	$scope.aktiv = true;
+})
    
 .controller('schlaegerCtrl', function($scope, $http, MyURL) {
 	$scope.$on('$ionicView.enter', function() {		
@@ -126,7 +155,7 @@ angular.module('app.controllers', [])
 .controller('saitenCtrl', function($scope, $http, MyURL) {
 	$scope.$on('$ionicView.enter', function() {		
 	$scope.saiten = null;
-			$http.get(MyURL.host+'saitenServlet')
+			$http.get(MyURL.hostNeu+'saiten/alle')
 					.success(function(data) {
 						$scope.saiten = data;
 					}).error(function(data, status, headers, config) {
@@ -139,27 +168,17 @@ angular.module('app.controllers', [])
 
 	var parameter = $stateParams.saitenId;
 
-	$http({
-		url : MyURL.host+'saitenServlet',
-		method : 'POST',
-		params : {
-			id : parameter
-		},
-		headers : {
-			'Content-Type' : 'application/json;charset=utf-8'
-		}
-	}).success(function(data) {
+	$http.get(MyURL.hostNeu+'saiten/id/'+parameter)
+	.success(function(data) {
 		$scope.saite = data;
 	}).error(function(data, status, headers, config) {
-
 	});
-	
 	
 	$scope.save = function(neu)
 	{
 		$http({
-			url : MyURL.host+'saitenServlet',
-			method : 'POST',
+			url : MyURL.hostNeu+'saiten',
+			method : 'PUT',
 			params : {
 				id : parameter,
 				saite : JSON.stringify(neu)
@@ -234,7 +253,7 @@ angular.module('app.controllers', [])
 	$scope.kunde = null
 
 	$scope.saiten = null;
-	$http.get(MyURL.host+'saitenServlet')
+	$http.get(MyURL.hostNeu+'saiten/alle')
 			.success(function(data) {
 				$scope.saiten = data;
 			}).error(function(data, status, headers, config) {
