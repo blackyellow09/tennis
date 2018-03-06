@@ -12,7 +12,7 @@
 		<p>deaktivierte Schläger werden in der Übersicht nach unten sortiert</p></ion-toggle>
 		<label id="bearbeiten-select1" class="item item-input item-select ">
 		<span class="input-label">Schlägermodell</span>
-			<select required ng-options="modell as modell.name for modell in modelle track by modell.name" ng-model="schlaeger">
+			<select required ng-options="modell.modellNr as modell.name for modell in modelle" ng-model="schlaeger">
 			</select>
 		</label>
 	</ion-list>

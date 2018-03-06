@@ -14,7 +14,7 @@
         <a class=" button button-positive  button-block icon-left ion-plus " id="bespannungen-button7" ui-sref="cMSuperDuperApp.neuerSchlaeger({kundenNr: item.kunde.kundennummer})">Neuer Schläger</a>
         <ion-list class=" " id="i.schlaeger.schlaegerId" ng-repeat="i in item.schlaeger">
             <ion-item id="i.schlaeger.schlaegerId" class="item-divider">Schläger {{i.schlaeger.schlaegerNr}}
-            <i class="icon icon-end ion-gear-a" ui-sref="cMSuperDuperApp.schlaegerBearbeiten({schlaegerId: i.schlaeger.schlaegerId})"></i>
+            <i class="icon icon-end ion-gear-a" ui-sref="cMSuperDuperApp.schlaegerBearbeiten({schlaegerId: i.schlaeger.schlaegerId, modellNr: i.schlaeger.modellNr})"></i>
             </ion-item>
         	<div style="" id="schlaegeruebersicht-list-item-container5" class="item item-body ">
 	            <div style=""> 

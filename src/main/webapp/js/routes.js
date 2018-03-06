@@ -42,7 +42,7 @@ angular.module('app.routes', [])
   })
 
   .state('cMSuperDuperApp.schlaegerBearbeiten', {
-    url: '/schlaeger/:schlaegerId',
+    url: '/schlaeger/:schlaegerId/:modellNr',
     views: {
       'tab1': {
         templateUrl: 'templates/schlaegerBearbeiten.html',

@@ -69,6 +69,7 @@ angular.module('app.controllers', [])
 				}).error(function(data, status, headers, config) {
 				});
 		});
+	$scope.schlaeger = parseInt($stateParams.modellNr);
 	/*
 	$http({
 		url : MyURL.host+'schlaegerBearbeitenServlet',
