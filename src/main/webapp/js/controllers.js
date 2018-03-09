@@ -70,21 +70,30 @@ angular.module('app.controllers', [])
 				});
 		});
 	$scope.schlaeger = parseInt($stateParams.modellNr);
-	/*
-	$http({
-		url : MyURL.host+'schlaegerBearbeitenServlet',
-		method : 'POST',
-		params : {
-			id : parameter
-		},
-		headers : {
-			'Content-Type' : 'application/json;charset=utf-8'
-		}
-	}).success(function(data) {
-		$scope.kunde = data;
-	}).error(function(data, status, headers, config) {
 
-	});*/
+	$scope.save = function(schlaeger, aktiv)
+	{
+		$http({
+			url : MyURL.hostNeu+'schlaegerBearbeiten',
+			method : 'PUT',
+			params : {
+				id : parameter,
+				modell : JSON.stringify(schlaeger)
+			},
+			headers : {
+				'Content-Type' : 'application/json;charset=utf-8'
+			}
+		}).success(function(data) {
+				$state.transitionTo('cMSuperDuperApp.schlaegeruebersicht', {kundenId: data}, {
+			    reload: true,
+			    inherit: true,
+			    notify: true
+				});
+		}).error(function(data, status, headers, config) {
+			$scope.msg = "Fehler beim Speichern";
+
+		});
+	}
 	$scope.aktiv = true;
 })
    

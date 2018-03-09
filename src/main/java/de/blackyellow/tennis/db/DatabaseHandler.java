@@ -752,4 +752,47 @@ public class DatabaseHandler {
 		}
 		return true;
 	}
+
+	public static boolean aktualisiereSchlaegerModell(String id, String modellNr) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`schlaeger` SET `Modell` = ? WHERE id = ?;");
+			preparedStatement.setInt(1, Integer.parseInt(modellNr));
+			preparedStatement.setInt(2, Integer.parseInt(id));
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_UPDATE_KUNDE, e);
+			return false;
+		}
+		return true;
+	}
+
+	public static int liefereKundeIdZuSchlaegerId(String schlaegerId) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return 0;
+		}
+		PreparedStatement preparedStatement;
+		int kundennummer = 0;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT Kunde FROM schlaeger where schlaeger.ID = ? ;");
+			preparedStatement.setInt(1, Integer.valueOf(schlaegerId));
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				kundennummer = resultSet.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_KUNDE_ZU_SCHLAEGER, e);
+			return kundennummer;
+		}
+		return kundennummer;
+	}
 }
