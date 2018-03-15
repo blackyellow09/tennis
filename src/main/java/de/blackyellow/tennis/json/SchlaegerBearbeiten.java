@@ -16,13 +16,14 @@ import javax.ws.rs.core.Response.Status;
 public class SchlaegerBearbeiten {
 
 	@PUT
-	@Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON})
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response speichereAenderungen(@QueryParam("id") String schlaegerId, @QueryParam("modell") String modellNr)
+	public Response speichereAenderungen(@QueryParam("id") String schlaegerId, @QueryParam("modell") String modellNr,
+			@QueryParam("aktiv") boolean aktiv)
 	{
 		if(!schlaegerId.isEmpty())
 		{
-			boolean success = aktualisiereSchlaegerModell(schlaegerId, modellNr);
+			boolean success = aktualisiereSchlaegerModell(schlaegerId, modellNr, aktiv);
 			if(success)
 			{
 				int kundeId = liefereKundeIdZuSchlaegerId(schlaegerId);

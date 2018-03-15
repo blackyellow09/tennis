@@ -753,7 +753,7 @@ public class DatabaseHandler {
 		return true;
 	}
 
-	public static boolean aktualisiereSchlaegerModell(String id, String modellNr) {
+	public static boolean aktualisiereSchlaegerModell(String id, String modellNr, boolean aktiv) {
 		Connection connection = DBConnection.getDBConnection();
 		if(connection == null)
 		{
@@ -761,9 +761,10 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`schlaeger` SET `Modell` = ? WHERE id = ?;");
+			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`schlaeger` SET `Modell` = ?, Aktiv = ? WHERE id = ?;");
 			preparedStatement.setInt(1, Integer.parseInt(modellNr));
-			preparedStatement.setInt(2, Integer.parseInt(id));
+			preparedStatement.setBoolean(2, aktiv);
+			preparedStatement.setInt(3, Integer.parseInt(id));
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {

@@ -70,6 +70,7 @@ angular.module('app.controllers', [])
 				});
 		});
 	$scope.schlaeger = parseInt($stateParams.modellNr);
+	$scope.aktiv = true;
 
 	$scope.save = function(schlaeger, aktiv)
 	{
@@ -78,7 +79,8 @@ angular.module('app.controllers', [])
 			method : 'PUT',
 			params : {
 				id : parameter,
-				modell : JSON.stringify(schlaeger)
+				modell : JSON.stringify(schlaeger), 
+				aktiv : JSON.stringify($scope.aktiv)
 			},
 			headers : {
 				'Content-Type' : 'application/json;charset=utf-8'
@@ -94,7 +96,6 @@ angular.module('app.controllers', [])
 
 		});
 	}
-	$scope.aktiv = true;
 })
    
 .controller('schlaegerCtrl', function($scope, $http, MyURL) {
