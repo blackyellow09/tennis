@@ -753,7 +753,7 @@ public class DatabaseHandler {
 		return true;
 	}
 
-	public static boolean aktualisiereSchlaegerModell(String id, String modellNr) {
+	public static boolean aktualisiereSchlaegerModell(String id, String modellNr, boolean aktiv) {
 		Connection connection = DBConnection.getDBConnection();
 		if(connection == null)
 		{
@@ -761,9 +761,10 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`schlaeger` SET `Modell` = ? WHERE id = ?;");
+			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`schlaeger` SET `Modell` = ?, Aktiv = ? WHERE id = ?;");
 			preparedStatement.setInt(1, Integer.parseInt(modellNr));
-			preparedStatement.setInt(2, Integer.parseInt(id));
+			preparedStatement.setBoolean(2, aktiv);
+			preparedStatement.setInt(3, Integer.parseInt(id));
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -794,5 +795,28 @@ public class DatabaseHandler {
 			return kundennummer;
 		}
 		return kundennummer;
+	}
+
+	public static boolean liefereIsSchlaegerAktiv(String schlaegerId) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return true;
+		}
+		PreparedStatement preparedStatement;
+		boolean aktiv = true;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT Aktiv FROM schlaeger where schlaeger.ID = ? ;");
+			preparedStatement.setInt(1, Integer.valueOf(schlaegerId));
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				aktiv = resultSet.getBoolean(1);
+			}
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_LIEFERE_KUNDE_ZU_SCHLAEGER, e);
+			return aktiv;
+		}
+		return aktiv;
 	}
 }

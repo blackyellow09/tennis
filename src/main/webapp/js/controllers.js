@@ -60,16 +60,28 @@ angular.module('app.controllers', [])
 
 .controller('schlaegerBearbeiten', function($scope, $stateParams, $http, $state, MyURL) {
 	var parameter = $stateParams.schlaegerId;
+	var modellnr = $stateParams.modellNr;
 
 	$scope.$on('$ionicView.enter', function() {		
 		$scope.modelle = null;
-		$http.get(MyURL.host+'schlaegerServlet')
-				.success(function(data) {
-					$scope.modelle = data;
-				}).error(function(data, status, headers, config) {
-				});
+		$http({
+			url : MyURL.hostNeu+'schlaegerBearbeiten',
+			method : 'GET',
+			params : {
+				id : parameter,
+			},
+			headers : {
+				'Content-Type' : 'application/json;charset=utf-8'
+			}
+		}).success(function(data) {
+			$scope.modelle = data.schlaeger;
+			$scope.aktiv = data.aktiv;
+		}).error(function(data, status, headers, config) {
+			$scope.msg = "Fehler beim Laden";
+
 		});
-	$scope.schlaeger = parseInt($stateParams.modellNr);
+		});
+	$scope.schlaeger = parseInt(modellnr);
 
 	$scope.save = function(schlaeger, aktiv)
 	{
@@ -78,7 +90,8 @@ angular.module('app.controllers', [])
 			method : 'PUT',
 			params : {
 				id : parameter,
-				modell : JSON.stringify(schlaeger)
+				modell : JSON.stringify(schlaeger), 
+				aktiv : JSON.stringify($scope.aktiv)
 			},
 			headers : {
 				'Content-Type' : 'application/json;charset=utf-8'
@@ -94,7 +107,6 @@ angular.module('app.controllers', [])
 
 		});
 	}
-	$scope.aktiv = true;
 })
    
 .controller('schlaegerCtrl', function($scope, $http, MyURL) {
