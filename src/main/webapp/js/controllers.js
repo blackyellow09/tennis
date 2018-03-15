@@ -80,7 +80,7 @@ angular.module('app.controllers', [])
 			$scope.msg = "Fehler beim Laden";
 
 		});
-		});
+	});
 	$scope.schlaeger = parseInt(modellnr);
 
 	$scope.save = function(schlaeger, aktiv)
