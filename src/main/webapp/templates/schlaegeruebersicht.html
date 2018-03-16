@@ -15,6 +15,7 @@
         <ion-list class=" " id="i.schlaeger.schlaegerId" ng-repeat="i in item.schlaeger">
             <ion-item id="i.schlaeger.schlaegerId" class="item-divider">Schläger {{i.schlaeger.schlaegerNr}}
             <i class="icon icon-end ion-gear-a" ui-sref="cMSuperDuperApp.schlaegerBearbeiten({schlaegerId: i.schlaeger.schlaegerId, modellNr: i.schlaeger.modellNr})"></i>
+            <p class="font-style: italic" ng-show="!i.schlaeger.aktiv">nicht mehr aktiv</p>
             </ion-item>
         	<div style="" id="schlaegeruebersicht-list-item-container5" class="item item-body ">
 	            <div style=""> 
@@ -32,7 +33,8 @@
 	                <b>Querseiten:</b> {{i.bespannung.quer}} kg
 	                <br>
 	            </div> 
-            <a class=" button button-positive  button-block icon-left ion-edit " id="bespannungen-button7" ui-sref="cMSuperDuperApp.bespannungen({schlaegerId: i.schlaeger.schlaegerId})">Bespannungen</a>
+            <button class=" button button-positive  button-block icon-left ion-edit" ng-show="i.schlaeger.aktiv" id="bespannungen-button7" ui-sref="cMSuperDuperApp.bespannungen({schlaegerId: i.schlaeger.schlaegerId})">Bespannungen</button>
+        	<button class=" button button-block button-energized icon-left ion-edit" ng-show="!i.schlaeger.aktiv" id="bespannungen-button7" ui-sref="cMSuperDuperApp.bespannungen({schlaegerId: i.schlaeger.schlaegerId})">Bespannungen</button>
         	</div>
         </ion-list>
     </ion-content>
