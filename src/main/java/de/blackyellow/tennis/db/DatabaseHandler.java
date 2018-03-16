@@ -308,24 +308,25 @@ public class DatabaseHandler {
 		}
 		PreparedStatement preparedStatement;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaegermodelle.*, schlaeger.nr, marken.*"
+			preparedStatement = connection.prepareStatement("SELECT schlaeger.id, schlaegermodelle.*, schlaeger.nr, marken.*, schlaeger.aktiv"
 					+ " FROM `schlaeger` , schlaegermodelle, marken WHERE `Kunde` = ? AND `Modell` = schlaegermodelle.id and marke = marken.Id;");
 			preparedStatement.setInt(1, kundennummer);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				int id = resultSet.getInt(1);
-				int modellId = resultSet.getInt(2);
-				String bezeichnung = resultSet.getString(4);
-				int mains = resultSet.getInt(5);
-				int crosses = resultSet.getInt(6);
-				int kopfgroesse = resultSet.getInt(7);
-				double gewicht = resultSet.getDouble(8);
-				double seitenlaenge = resultSet.getDouble(9);
-				double seitenlaengeOpt = resultSet.getDouble(10);
-				int nr = resultSet.getInt(11);
+				int id = resultSet.getInt("schlaeger.id");
+				int modellId = resultSet.getInt("schlaegermodelle.ID");
+				String bezeichnung = resultSet.getString("schlaegermodelle.Bezeichnung");
+				int mains = resultSet.getInt("schlaegermodelle.Mains");
+				int crosses = resultSet.getInt("schlaegermodelle.Crosses");
+				int kopfgroesse = resultSet.getInt("schlaegermodelle.Kopfgroesse");
+				double gewicht = resultSet.getDouble("schlaegermodelle.Gewicht");
+				double seitenlaenge = resultSet.getDouble("schlaegermodelle.empfSeitenlaenge");
+				double seitenlaengeOpt = resultSet.getDouble("schlaegermodelle.optSeitenlaenge");
+				int nr = resultSet.getInt("schlaeger.nr");
+				boolean aktiv = resultSet.getBoolean("schlaeger.aktiv");
 				Marke marke = new Marke(resultSet.getInt("marken.id"), resultSet.getString("marken.Name"), resultSet.getString("marken.URL"));
 				listSchlaeger.add(new Schlaeger(id, modellId, kundennummer, nr, marke, bezeichnung, mains, crosses, 
-						kopfgroesse, gewicht, seitenlaenge, seitenlaengeOpt));
+						kopfgroesse, gewicht, seitenlaenge, seitenlaengeOpt, aktiv));
 			}
 			
 			for (Schlaeger schlaeger : listSchlaeger) {

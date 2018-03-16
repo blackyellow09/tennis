@@ -41,6 +41,7 @@ public class Schlaeger implements Serializable{
 	private int schlaegerId;
 	private int schlaegerNr;
 	private int modellNr;
+	private boolean aktiv = true;
 
 	public Schlaeger(int modellNr, Marke marke, String bezeichnung) {
 		this.modellNr = modellNr;
@@ -61,11 +62,12 @@ public class Schlaeger implements Serializable{
 	}
 
 	public Schlaeger(int schlaegerId, int modellId, int kundennummer, int schlaegerNr, Marke marke, String bezeichnung2, int mains2,
-			int crosses2, int kopfgroesse2, double gewicht2, double seitenlaenge2, double seitenlaengeOpt2) {
+			int crosses2, int kopfgroesse2, double gewicht2, double seitenlaenge2, double seitenlaengeOpt2, boolean aktiv) {
 		this(kundennummer, marke, bezeichnung2, mains2, crosses2, kopfgroesse2, gewicht2, seitenlaenge2, seitenlaengeOpt2);
 		this.setSchlaegerNr(schlaegerNr);
 		this.setModellNr(modellId);
 		this.setSchlaegerId(schlaegerId);
+		this.aktiv = aktiv;
 	}
 
 	public Schlaeger() {
@@ -179,5 +181,13 @@ public class Schlaeger implements Serializable{
 
 	public void setModellNr(int modellNr) {
 		this.modellNr = modellNr;
+	}
+
+	public void setAktiv(boolean aktiv) {
+		this.aktiv = aktiv;
+	}
+
+	public boolean isAktiv() {
+		return aktiv;
 	}
 }

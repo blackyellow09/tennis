@@ -19,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import de.blackyellow.tennis.bespannung.BespannungKurzItem;
 import de.blackyellow.tennis.db.DatabaseHandler;
 import de.blackyellow.tennis.person.Kunde;
+import de.blackyellow.tennis.util.SchlaegerUebersichtComparator;
 
 public class KundenServlet extends HttpServlet {
 
@@ -58,6 +59,7 @@ public class KundenServlet extends HttpServlet {
 			else
 			{
 				ArrayList<BespannungKurzItem> schlaeger = DatabaseHandler.liefereSchlaegerZuKunde(kundenNr);
+				schlaeger.sort(new SchlaegerUebersichtComparator());
 				int anzahlBespannungen = DatabaseHandler.liefereAnzahlBespannungenZuKunde(kundenNr);
 				SchlaegerZuKunde schlaegerZuKunde = new SchlaegerZuKunde(kunde, schlaeger, anzahlBespannungen);
 				json = gson.toJson(schlaegerZuKunde);
