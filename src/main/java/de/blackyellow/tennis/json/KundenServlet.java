@@ -25,7 +25,7 @@ public class KundenServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	      ArrayList<Kunde> kunden = readAllKunden();
+	      ArrayList<Kunde> kunden = liefereAlleKunden();
 	      Gson gson = new Gson();
 	      String mainObject = gson.toJson(kunden);
 
@@ -33,6 +33,10 @@ public class KundenServlet extends HttpServlet {
 	      
 	      prepareResponse(resp);
 	      resp.getWriter().write(mainObject);
+	}
+
+	protected ArrayList<Kunde> liefereAlleKunden() {
+		return readAllKunden();
 	}
 
 	@Override
@@ -45,10 +49,10 @@ public class KundenServlet extends HttpServlet {
 			if(isKundendatenVorhanden(kundeParam))
 			{
 				Kunde fromJson = createObjectFromJson(kundeParam, Kunde.class);
-				DatabaseHandler.updateKunde(fromJson);
+				updateKunde(fromJson);
 				return;
 			}
-			Kunde kunde = DatabaseHandler.liefereKunde(kundenNr);
+			Kunde kunde = liefereKunde(kundenNr);
 			Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 			String edit = getParameter(req, "edit");
 			String json;
@@ -58,9 +62,9 @@ public class KundenServlet extends HttpServlet {
 			}
 			else
 			{
-				ArrayList<BespannungKurzItem> schlaeger = DatabaseHandler.liefereSchlaegerZuKunde(kundenNr);
+				ArrayList<BespannungKurzItem> schlaeger = liefereSchlaegerZuKunde(kundenNr);
 				schlaeger.sort(new SchlaegerUebersichtComparator());
-				int anzahlBespannungen = DatabaseHandler.liefereAnzahlBespannungenZuKunde(kundenNr);
+				int anzahlBespannungen = liefereAnzahlBespannungenZuKunde(kundenNr);
 				SchlaegerZuKunde schlaegerZuKunde = new SchlaegerZuKunde(kunde, schlaeger, anzahlBespannungen);
 				json = gson.toJson(schlaegerZuKunde);
 			}
@@ -72,8 +76,28 @@ public class KundenServlet extends HttpServlet {
 		else if(isKundendatenVorhanden(kundeParam))
 		{
 			Kunde fromJson = createObjectFromJson(kundeParam, Kunde.class);
-			DatabaseHandler.speichereNeuenKunden(fromJson);
+			speichereKunde(fromJson);
 		}
+	}
+
+	protected void updateKunde(Kunde fromJson) {
+		DatabaseHandler.updateKunde(fromJson);
+	}
+
+	protected int liefereAnzahlBespannungenZuKunde(int kundenNr) {
+		return DatabaseHandler.liefereAnzahlBespannungenZuKunde(kundenNr);
+	}
+
+	protected ArrayList<BespannungKurzItem> liefereSchlaegerZuKunde(int kundenNr) {
+		return DatabaseHandler.liefereSchlaegerZuKunde(kundenNr);
+	}
+
+	protected Kunde liefereKunde(int kundenNr) {
+		return DatabaseHandler.liefereKunde(kundenNr);
+	}
+
+	protected void speichereKunde(Kunde fromJson) {
+		DatabaseHandler.speichereNeuenKunden(fromJson);
 	}
 
 	private boolean isEditMode(String edit) {
