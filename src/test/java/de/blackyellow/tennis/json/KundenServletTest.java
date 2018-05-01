@@ -54,7 +54,8 @@ public class KundenServletTest {
 				return kunden;
 			}
 				};
-		
+//		HttpUriRequest request = new HttpGet(uri);
+//		HttpClientBuilder.create().build().execute(request);
 		underTest.doGet(req, resp);
 		
 		assertThat(resp.getContentAsString(), containsString("Saskia Neid"));
