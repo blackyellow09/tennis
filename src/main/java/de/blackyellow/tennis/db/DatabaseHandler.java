@@ -344,6 +344,7 @@ public class DatabaseHandler {
 					int kgQuer = resultSet2.getInt(6);
 					bespannung = new Bespannung(id, datum, dt, kgLaengs, kgQuer);
 					bespannung.setPreis(resultSet2.getBigDecimal(7));
+					bespannung.setSaite(liefereSaite(connection, bespannung.getId()));
 				}
 				listKurzItems.add(new BespannungKurzItem(schlaeger, bespannung));
 			}
