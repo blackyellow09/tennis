@@ -37,7 +37,7 @@ private static Logger logger = Logger.getLogger(DBConnection.class);
 		if(basepath.equals("/localhost"))
 		{
 			String getenv = System.getenv("MYSQL_SERVICE_HOST");
-			host = "jdbc:mysql://"+getenv+":3306/tennis";
+			host = "jdbc:mysql://"+getenv+":3306/tennis?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	        username = props.getProperty("username").toString();
 	        password = props.getProperty("password").toString();
 		}

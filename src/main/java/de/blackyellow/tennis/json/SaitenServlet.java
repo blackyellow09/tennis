@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.google.gson.Gson;
 
+import de.blackyellow.tennis.db.DatabaseHandler;
 import de.blackyellow.tennis.saite.Saite;
 
 @SuppressWarnings("serial")
@@ -34,6 +35,10 @@ public class SaitenServlet extends HttpServlet {
 		ArrayList<Saite> saiten = liefereSaiten();
 	      Gson gson = new Gson();
 	      return gson.toJson(saiten);
+	}
+
+	protected ArrayList<Saite> liefereSaiten() {
+		return DatabaseHandler.liefereSaiten();
 	}
 	
 	@Path("id/{id}")
@@ -50,6 +55,10 @@ public class SaitenServlet extends HttpServlet {
 		}
 		return null;
 	}
+
+	protected Saite liefereSaite(int saiteId) {
+		return DatabaseHandler.liefereSaite(saiteId);
+	}
 	
 	@PUT
 	@Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
@@ -63,7 +72,15 @@ public class SaitenServlet extends HttpServlet {
 		else
 		{
 			Saite fromJson = createObjectFromJson(saiteParam, Saite.class);
-			speichereNeueSaite(fromJson);
+			speichereSaite(fromJson);
 		}
+	}
+
+	protected void speichereSaite(Saite fromJson) {
+		speichereNeueSaite(fromJson);
+	}
+
+	protected void aktualisiereSaite(Saite fromJson) {
+		DatabaseHandler.aktualisiereSaite(fromJson);
 	}
 }
