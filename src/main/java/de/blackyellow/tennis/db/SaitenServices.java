@@ -47,4 +47,9 @@ public class SaitenServices {
 		}
 		return listSaite;
 	}
+
+
+	public Saite liefereSaite(int saiteId) {
+		return DatabaseHandler.liefereSaite(saiteId);
+	}
 }

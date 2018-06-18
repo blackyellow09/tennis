@@ -42,8 +42,8 @@ public class SaitenServlet {
 	public Response getAlleSaiten()
 	{
 		ArrayList<Saite> saiten = liefereSaiten();
-	      Gson gson = new Gson();
-	      return Response.status(Status.OK).entity(gson.toJson(saiten)).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de").build();
+	    Gson gson = new Gson();
+	    return Response.status(Status.OK).entity(gson.toJson(saiten)).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de").build();
 	}
 
 	protected ArrayList<Saite> liefereSaiten() {
@@ -53,20 +53,21 @@ public class SaitenServlet {
 	@Path("id/{id}")
 	@GET
 	@Produces("application/json")
-	public String getSaite(@PathParam("id") String id)
+	public Response getSaite(@PathParam("id") String id)
 	{
 		if(!id.isEmpty())
 		{
 			int saiteId = Integer.parseInt(id);
 			Saite saite = liefereSaite(saiteId);
 			Gson gson = new Gson();
-			return gson.toJson(saite);
+			return Response.status(Status.OK).entity(gson.toJson(saite)).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de").build();
 		}
-		return null;
+		//TODO Status OK?
+		return Response.status(Status.OK).build();
 	}
 
 	protected Saite liefereSaite(int saiteId) {
-		return DatabaseHandler.liefereSaite(saiteId);
+		return services.liefereSaite(saiteId);
 	}
 	
 	@PUT
