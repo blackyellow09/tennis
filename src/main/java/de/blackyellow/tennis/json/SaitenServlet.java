@@ -5,9 +5,11 @@ import static de.blackyellow.tennis.db.DatabaseHandler.liefereSaite;
 import static de.blackyellow.tennis.db.DatabaseHandler.liefereSaiten;
 import static de.blackyellow.tennis.db.DatabaseHandler.speichereNeueSaite;
 import static de.blackyellow.tennis.util.ServletUtil.createObjectFromJson;
+import static org.hamcrest.core.Is.is;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServlet;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,29 +18,36 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.google.gson.Gson;
 
 import de.blackyellow.tennis.db.DatabaseHandler;
+import de.blackyellow.tennis.db.SaitenServices;
 import de.blackyellow.tennis.saite.Saite;
 
 @SuppressWarnings("serial")
 @Path("/saiten")
-public class SaitenServlet extends HttpServlet {
+public class SaitenServlet {
 
+	@Inject
+	protected SaitenServices services;
+	
 	@Path("alle")
 	@GET
 	@Produces("application/json")
-	public String getAlleSaiten()
+	public Response getAlleSaiten()
 	{
 		ArrayList<Saite> saiten = liefereSaiten();
 	      Gson gson = new Gson();
-	      return gson.toJson(saiten);
+	      return Response.status(Status.OK).entity(gson.toJson(saiten)).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de").build();
 	}
 
 	protected ArrayList<Saite> liefereSaiten() {
-		return DatabaseHandler.liefereSaiten();
+		return services.liefereSaiten();
 	}
 	
 	@Path("id/{id}")

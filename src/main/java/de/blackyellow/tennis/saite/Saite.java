@@ -3,6 +3,12 @@ package de.blackyellow.tennis.saite;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Saite implements Serializable{
 
 	/**
