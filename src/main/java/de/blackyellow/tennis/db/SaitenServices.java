@@ -54,6 +54,7 @@ public class SaitenServices {
 	public Saite liefereSaite(int saiteId) {
 		return DatabaseHandler.liefereSaite(saiteId);
 	}
+<<<<<<< HEAD
 	
 	public void speichereSaite(Saite fromJson) {
 		speichereNeueSaite(fromJson);
@@ -62,4 +63,6 @@ public class SaitenServices {
 	public void aktualisiereSaite(Saite fromJson) {
 		DatabaseHandler.aktualisiereSaite(fromJson);
 	}
+=======
+>>>>>>> branch 'develop' of https://github.com/blackyellow09/tennis.git
 }

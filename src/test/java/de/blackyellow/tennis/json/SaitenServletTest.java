@@ -10,7 +10,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Singleton;
+<<<<<<< HEAD
 import javax.ws.rs.client.Entity;
+=======
+>>>>>>> branch 'develop' of https://github.com/blackyellow09/tennis.git
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -37,9 +40,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import com.google.gson.Gson;
+<<<<<<< HEAD
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+=======
+>>>>>>> branch 'develop' of https://github.com/blackyellow09/tennis.git
 import de.blackyellow.tennis.db.SaitenServices;
 import de.blackyellow.tennis.saite.Saite;
 
