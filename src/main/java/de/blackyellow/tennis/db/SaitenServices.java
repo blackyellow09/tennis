@@ -1,5 +1,7 @@
 package de.blackyellow.tennis.db;
 
+import static de.blackyellow.tennis.db.DatabaseHandler.speichereNeueSaite;
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,5 +48,18 @@ public class SaitenServices {
 			logger.error(ErrorConstants.FEHLER_LIEFERE_SAITEN, e);
 		}
 		return listSaite;
+	}
+
+
+	public Saite liefereSaite(int saiteId) {
+		return DatabaseHandler.liefereSaite(saiteId);
+	}
+	
+	public void speichereSaite(Saite fromJson) {
+		speichereNeueSaite(fromJson);
+	}
+
+	public void aktualisiereSaite(Saite fromJson) {
+		DatabaseHandler.aktualisiereSaite(fromJson);
 	}
 }

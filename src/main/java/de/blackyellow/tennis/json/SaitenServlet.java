@@ -10,6 +10,7 @@ import static org.hamcrest.core.Is.is;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -30,6 +31,7 @@ import de.blackyellow.tennis.db.SaitenServices;
 import de.blackyellow.tennis.saite.Saite;
 
 @SuppressWarnings("serial")
+@Singleton
 @Path("/saiten")
 public class SaitenServlet {
 
@@ -42,8 +44,8 @@ public class SaitenServlet {
 	public Response getAlleSaiten()
 	{
 		ArrayList<Saite> saiten = liefereSaiten();
-	      Gson gson = new Gson();
-	      return Response.status(Status.OK).entity(gson.toJson(saiten)).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de").build();
+	    Gson gson = new Gson();
+	    return Response.status(Status.OK).entity(gson.toJson(saiten)).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de").build();
 	}
 
 	protected ArrayList<Saite> liefereSaiten() {
@@ -53,20 +55,21 @@ public class SaitenServlet {
 	@Path("id/{id}")
 	@GET
 	@Produces("application/json")
-	public String getSaite(@PathParam("id") String id)
+	public Response getSaite(@PathParam("id") String id)
 	{
 		if(!id.isEmpty())
 		{
 			int saiteId = Integer.parseInt(id);
 			Saite saite = liefereSaite(saiteId);
 			Gson gson = new Gson();
-			return gson.toJson(saite);
+			return Response.status(Status.OK).entity(gson.toJson(saite)).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de").build();
 		}
-		return null;
+		//TODO Status OK?
+		return Response.status(Status.OK).build();
 	}
 
 	protected Saite liefereSaite(int saiteId) {
-		return DatabaseHandler.liefereSaite(saiteId);
+		return services.liefereSaite(saiteId);
 	}
 	
 	@PUT
@@ -86,10 +89,10 @@ public class SaitenServlet {
 	}
 
 	protected void speichereSaite(Saite fromJson) {
-		speichereNeueSaite(fromJson);
+		services.speichereSaite(fromJson);
 	}
 
 	protected void aktualisiereSaite(Saite fromJson) {
-		DatabaseHandler.aktualisiereSaite(fromJson);
+		services.aktualisiereSaite(fromJson);
 	}
 }
