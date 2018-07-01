@@ -10,10 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Singleton;
-<<<<<<< HEAD
 import javax.ws.rs.client.Entity;
-=======
->>>>>>> branch 'develop' of https://github.com/blackyellow09/tennis.git
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
@@ -33,6 +30,7 @@ import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.glassfish.jersey.uri.UriComponent;
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
 import org.junit.Test;
@@ -40,16 +38,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import com.google.gson.Gson;
-<<<<<<< HEAD
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-=======
->>>>>>> branch 'develop' of https://github.com/blackyellow09/tennis.git
 import de.blackyellow.tennis.db.SaitenServices;
 import de.blackyellow.tennis.saite.Saite;
 
-public class SaitenServletTest extends JerseyTest{//FunctionalTest{
+public class SaitenServletTest extends JerseyTest{
 
 	SaitenServlet underTest = spy(SaitenServlet.class);
 	
@@ -89,9 +81,6 @@ public class SaitenServletTest extends JerseyTest{//FunctionalTest{
 		colSaiten.add(createSaite());
 		when(saitenServices.liefereSaiten()).thenReturn(colSaiten);
 	
-//		Response response = underTest.getAlleSaiten();
-//		String entity = response.getEntity().toString();
-//		List<Saite> alleSaiten = new Gson().fromJson(entity, new TypeToken<List<Saite>>(){}.getType());
 		WebTarget targetUpdated = target("/saiten/alle");
 	    
 		Response response = targetUpdated.request().accept(MediaType.APPLICATION_JSON).get();
@@ -133,30 +122,72 @@ public class SaitenServletTest extends JerseyTest{//FunctionalTest{
 	
 	@Test
 	public void wennSaitenIdVorhanden_dannAktualisiereSaite() throws Exception {
-		Mockito.doNothing().when(saitenServices).aktualisiereSaite(Mockito.any(Saite.class));
+		Mockito.doReturn(Boolean.TRUE).when(saitenServices).aktualisiereSaite(Mockito.any(Saite.class));
 		Saite saite = createSaite();
 		
-//		underTest.updateSaite("1", new Gson().toJson(saite));
 		WebTarget targetUpdated = target("/saiten/");
 		MultivaluedMap<String, String> entity = new MultivaluedHashMap<>();
 		entity.add("id", "1");
-//		entity.add("saite", new Gson().toJson(saite));
-		//TODO: wie json-String ins richtige Format?
-		Response response = targetUpdated.queryParam("id", "1").queryParam("saite", "%7B%22id%22:12,%22marke%22:%22dfg+bsfg%22,%22bezeichnung%22:%22sdfsdf%22,%22typ%22:%22%22,%22preis%22:0,%22name%22:%22dfg+bsfg+sdf%22%7D")
+		String saiteJson = new Gson().toJson(saite);
+		String encodedJson = UriComponent.encode(saiteJson, UriComponent.Type.QUERY_PARAM_SPACE_ENCODED);
+
+		targetUpdated.queryParam("id", "1").queryParam("saite", encodedJson)
 				.request().accept(MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
-		
 		
 		Mockito.verify(saitenServices).aktualisiereSaite(Mockito.any(Saite.class));
 	}
 	
 	@Test
-	public void wennSaitenIdNichtVorhanden_dannSpeichereSaite() throws Exception {
-		Mockito.doNothing().when(underTest).speichereSaite(Mockito.any(Saite.class));
+	public void wennFehlerBeimAktualisierenSaite_dannSendeFehlerStatus() throws Exception {
+		Mockito.doReturn(Boolean.FALSE).when(saitenServices).aktualisiereSaite(Mockito.any(Saite.class));
 		Saite saite = createSaite();
 		
-		underTest.updateSaite("", new Gson().toJson(saite));
+		WebTarget targetUpdated = target("/saiten/");
+		MultivaluedMap<String, String> entity = new MultivaluedHashMap<>();
+		entity.add("id", "1");
+		String saiteJson = new Gson().toJson(saite);
+		String encodedJson = UriComponent.encode(saiteJson, UriComponent.Type.QUERY_PARAM_SPACE_ENCODED);
+
+		Response response = targetUpdated.queryParam("id", "1").queryParam("saite", encodedJson)
+				.request().accept(MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
 		
-		Mockito.verify(underTest).speichereSaite(Mockito.any(Saite.class));
+		Mockito.verify(saitenServices).aktualisiereSaite(Mockito.any(Saite.class));
+		assertThat(response.getStatusInfo().toEnum(), is(Status.INTERNAL_SERVER_ERROR));
+	}
+	
+	@Test
+	public void wennSaitenIdNichtVorhanden_dannSpeichereSaite() throws Exception {
+		Mockito.doReturn(Boolean.TRUE).when(underTest).speichereSaite(Mockito.any(Saite.class));
+		Saite saite = createSaite();
+		
+		WebTarget targetUpdated = target("/saiten/");
+		MultivaluedMap<String, String> entity = new MultivaluedHashMap<>();
+		entity.add("id", "");
+		String saiteJson = new Gson().toJson(saite);
+		String encodedJson = UriComponent.encode(saiteJson, UriComponent.Type.QUERY_PARAM_SPACE_ENCODED);
+
+		targetUpdated.queryParam("id", "").queryParam("saite", encodedJson)
+				.request().accept(MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		
+		Mockito.verify(saitenServices).speichereSaite(Mockito.any(Saite.class));
+	}
+	
+	@Test
+	public void wennFehlerBeimSpeichernSaite_dannSendeFehlerStatus() throws Exception {
+		Mockito.doReturn(Boolean.FALSE).when(underTest).speichereSaite(Mockito.any(Saite.class));
+		Saite saite = createSaite();
+		
+		WebTarget targetUpdated = target("/saiten/");
+		MultivaluedMap<String, String> entity = new MultivaluedHashMap<>();
+		entity.add("id", "");
+		String saiteJson = new Gson().toJson(saite);
+		String encodedJson = UriComponent.encode(saiteJson, UriComponent.Type.QUERY_PARAM_SPACE_ENCODED);
+
+		Response response = targetUpdated.queryParam("id", "").queryParam("saite", encodedJson)
+				.request().accept(MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		
+		Mockito.verify(saitenServices).speichereSaite(Mockito.any(Saite.class));
+		assertThat(response.getStatusInfo().toEnum(), is(Status.INTERNAL_SERVER_ERROR));
 	}
 
 }

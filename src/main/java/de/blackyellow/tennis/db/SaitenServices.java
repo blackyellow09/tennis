@@ -1,7 +1,5 @@
 package de.blackyellow.tennis.db;
 
-import static de.blackyellow.tennis.db.DatabaseHandler.speichereNeueSaite;
-
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -54,15 +52,49 @@ public class SaitenServices {
 	public Saite liefereSaite(int saiteId) {
 		return DatabaseHandler.liefereSaite(saiteId);
 	}
-<<<<<<< HEAD
 	
-	public void speichereSaite(Saite fromJson) {
-		speichereNeueSaite(fromJson);
+	public boolean speichereSaite(Saite saite) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("INSERT INTO `tennis`.`saiten` (`Marke`, `Bezeichnung`, Typ, Preis) VALUES (?, ?, ?, ?);");
+			preparedStatement.setString(1, saite.getMarke());
+			preparedStatement.setString(2, saite.getBezeichnung());
+			preparedStatement.setString(3, saite.getTyp());
+			preparedStatement.setBigDecimal(4, saite.getPreis());
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_SPEICHERE_NEUE_SAITE, e);
+			return false;
+		}
+		return true;
 	}
 
-	public void aktualisiereSaite(Saite fromJson) {
-		DatabaseHandler.aktualisiereSaite(fromJson);
+	public boolean aktualisiereSaite(Saite saite) {
+		Connection connection = DBConnection.getDBConnection();
+		if(connection == null)
+		{
+			return false;
+		}
+		PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("UPDATE `tennis`.`saiten` SET Marke = ?, Bezeichnung = ?, Typ = ?, Preis = ? WHERE ID = ?;");
+			preparedStatement.setString(1, saite.getMarke());
+			preparedStatement.setString(2, saite.getBezeichnung());
+			preparedStatement.setString(3, saite.getTyp());
+			preparedStatement.setBigDecimal(4, saite.getPreis());
+			preparedStatement.setInt(5, saite.getId());
+			preparedStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			logger.error(ErrorConstants.FEHLER_UPDATE_SAITE, e);
+			return false;
+		}
+		return true;
 	}
-=======
->>>>>>> branch 'develop' of https://github.com/blackyellow09/tennis.git
 }
