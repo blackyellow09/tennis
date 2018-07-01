@@ -1,6 +1,11 @@
 <ion-view style="" class=" " id="saiteDetail" title="Details zur Saite" ng-controller="saitenDetailCtrl">
 	<ion-content class="has-header" padding="true">
-	<ion-item id="bearbeiten-list-item-divider3" class="item-divider ">Details zur Seite</ion-item>
+<div class="list card" ng-show="showMsg">
+	<a class="item item-icon-left item-assertive"> <i
+		class="icon ion-alert-circled"></i> {{msg}}
+	</a>
+</div>
+<ion-item id="bearbeiten-list-item-divider3" class="item-divider ">Details zur Seite</ion-item>
 		<form class="list " id="bearbeiten-formSaite" >
 			<label class="item item-input item-stacked-label"> <span
 				class="input-label">Marke</span> <input required="required" type="text"
@@ -21,7 +26,6 @@
 		</form>
 		<button class=" button button-positive  button-block "
 			id="bearbeiten-button10" ng-click="save(saite)">Speichern</button>
-			{{msg}}
 	</ion-content> 
 </ion-view>
 </body>
