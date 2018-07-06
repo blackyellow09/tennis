@@ -65,6 +65,7 @@ public class SaitenServlet {
 	}
 	
 	@OPTIONS
+	@Path("/*")
 	public Response options()
 	{
 		return Response.status(Status.OK).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de")
