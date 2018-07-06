@@ -15,7 +15,8 @@ angular.module('app.controllers')
 
 .controller('saitenDetailCtrl', function($scope, $stateParams, $http, $state, MyURL) {
 	$scope.saite = null;
-
+	$scope.showMsg = false;
+	
 	var parameter = $stateParams.saitenId;
 
 	$http.get(MyURL.hostNeu+'saiten/id/'+parameter)
@@ -43,7 +44,8 @@ angular.module('app.controllers')
 			    notify: true
 				});
 		}).error(function(data, status, headers, config) {
-			$scope.msg = "Fehler";
+			$scope.msg = "Es ist ein Fehler aufgetreten, bitte probiere es nochmal.";
+			$scope.showMsg = true;
 
 		});
 	}
