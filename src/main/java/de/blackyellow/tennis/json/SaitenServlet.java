@@ -74,7 +74,8 @@ public class SaitenServlet {
 	
 	@PUT
 	@Consumes({MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON})
-	public void updateSaite(@QueryParam("id") String id, @QueryParam("saite") String saiteParam)
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response updateSaite(@QueryParam("id") String id, @QueryParam("saite") String saiteParam)
 	{
 		if(!id.isEmpty())
 		{
@@ -92,6 +93,7 @@ public class SaitenServlet {
 				throw new InternalServerErrorException();
 			}
 		}
+		return Response.status(Status.OK).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de").build();
 	}
 
 	protected boolean speichereSaite(Saite fromJson) {
