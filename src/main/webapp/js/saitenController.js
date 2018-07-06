@@ -35,7 +35,8 @@ angular.module('app.controllers')
 				saite : JSON.stringify(neu)
 			},
 			headers : {
-				'Content-Type' : 'application/json;charset=utf-8'
+				'Content-Type' : 'application/json;charset=utf-8',
+				'Access-Control-Allow-Origin': 'http://tennis.blackyellow.de'
 			}
 		}).success(function(data) {
 				$state.transitionTo('cMSuperDuperApp.saiten', $state.$current.params, {
