@@ -65,8 +65,7 @@ public class SaitenServlet {
 	}
 	
 	@OPTIONS
-	@Path("/*")
-	public Response options()
+	public Response options(@QueryParam("id") String id, @QueryParam("saite") String saiteParam)
 	{
 		return Response.status(Status.OK).header("Access-Control-Allow-Origin", "http://tennis.blackyellow.de")
 				.header("Access-Control-Allow-Methods", "POST, GET, PUT, UPDATE, OPTIONS")
